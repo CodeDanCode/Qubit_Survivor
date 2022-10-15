@@ -14,3 +14,4 @@ control_state = None
 main_state = None
 
 num_enemies = None
+player_turn = None
