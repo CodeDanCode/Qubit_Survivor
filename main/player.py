@@ -100,8 +100,6 @@ class Player(pygame.sprite.Sprite):
         # if self.timers[player_turn].active:
             # print("player turn: " + str(self.timers[player_turn].active))
     
-
-
     def update_timers(self):
         for timer in self.timers.values():
             timer.update()
@@ -119,7 +117,6 @@ class Player(pygame.sprite.Sprite):
         self.attack_box.centery = round(self.pos.y)
         self.rect.centery = self.attack_box.centery
       
-
     def update(self,dt):
         self.input()
         self.get_status()
@@ -131,7 +128,7 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self,pos,player,group):
         super().__init__(group)
 
-        self.enemy_type = 'robot'
+        self.enemy_type = 'zombie'
         self.import_assets()
         self.status = '_idle'
         self.frame_index = 0
