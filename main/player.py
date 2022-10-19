@@ -9,7 +9,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__(group)
         # Will use this for import character assets 
         self.import_assets()
-        self.status = 'idle'
+        self.status = '_idle'
         self.frame_index = 0 
 
         # general sprite setup  
@@ -24,8 +24,8 @@ class Player(pygame.sprite.Sprite):
         self.speed = 200
         
         self.timers = {
-            use_attack: Timer(350, self.use_attack),
-            player_turn: Timer(200)
+            USE_ATTACK: Timer(350, self.use_attack),
+            PLAYER_TURN: Timer(200)
             }
 
         self.selected_attack = 'hoot'
@@ -35,7 +35,7 @@ class Player(pygame.sprite.Sprite):
         self.collision_sprites = collision_sprites
 
     def import_assets(self):
-        self.animations = {'idle':[],'up':[],'down':[],'left':[],'right':[],
+        self.animations = {'_idle':[],'up':[],'down':[],'left':[],'right':[],
                             'left_attack':[],'right_attack':[]}
 
         for animation in self.animations.keys():
@@ -54,41 +54,47 @@ class Player(pygame.sprite.Sprite):
         
     def input(self):
         keys = pygame.key.get_pressed()
-        if not self.timers[use_attack].active:
-            if keys[pygame.K_UP]:
-                self.direction.y = -1
-                self.status = 'up'
-            elif keys[pygame.K_DOWN]:
-                self.direction.y = 1
-                self.status = 'down'
-            else:
-                self.direction.y = 0
+        # control for player movement
+        # condition on player_turn and attack turn status
+        # control for attack selection 
+        # condition attack selection based on and 
+        #
+        # if not self.timers[USE_ATTACK].active: 
+        #  change if for player turn to not allow players to move. 
+        if keys[pygame.K_UP]:
+            self.direction.y = -1
+            self.status = 'up'
+        elif keys[pygame.K_DOWN]:
+            self.direction.y = 1
+            self.status = 'down'
+        else:
+            self.direction.y = 0
 
-            if keys[pygame.K_RIGHT]:
-                self.direction.x = 1
-                self.status = 'right'
-            elif keys[pygame.K_LEFT]:
-                self.direction.x = -1
-                self.status = 'left'
-            else:
-                self.direction.x = 0
+        if keys[pygame.K_RIGHT]:
+            self.direction.x = 1
+            self.status = 'right'
+        elif keys[pygame.K_LEFT]:
+            self.direction.x = -1
+            self.status = 'left'
+        else:
+            self.direction.x = 0
 
-            if keys[pygame.K_SPACE]:
-                self.timers[use_attack].activate()
-                self.direction = pygame.math.Vector2()
+        if keys[pygame.K_SPACE]:
+            self.timers[USE_ATTACK].activate()
+            self.direction = pygame.math.Vector2()
 
-            # if keys[pygame.K_q] and not self.timers[player_turn].active:
-            #     self.timers[player_turn].activate()
-            #     self.player_index +=1
-            #     print(self.player_index)
-            #     self.direction = pygame.math.Vector2()
+        # if keys[pygame.K_q] and not self.timers[player_turn].active:
+        #     self.timers[player_turn].activate()
+        #     self.player_index +=1
+        #     print(self.player_index)
+        #     self.direction = pygame.math.Vector2()
 
     def get_status(self):
 
         if self.direction.magnitude() == 0:
             # self.status +=self.status.split('_')[0] + "idle"
-            self.status += 'idle'
-        if self.timers[use_attack].active:
+            self.status += '_idle'
+        if self.timers[USE_ATTACK].active:
             print("attack is be used")
         
         # if self.timers[player_turn].active:
@@ -125,14 +131,12 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self,pos,player,group):
         super().__init__(group)
 
-        self.enemy_type = 'zombie'
+        self.enemy_type = 'robot'
         self.import_assets()
         self.status = '_idle'
         self.frame_index = 0
 
-        # self.image = pygame.Surface((24,24))
-        # # temp sprite for testing functionality
-        
+        # self.image = pygame.Surface((24,24))    
         # self.circle = pygame.draw.circle(self.image,RED,(12,12),12)
         self.image = self.animations[self.status][self.frame_index]
         self.rect = self.image.get_rect(center = pos)
@@ -159,8 +163,6 @@ class Enemy(pygame.sprite.Sprite):
 
         if self.direction.magnitude() == 0:
             self.status = self.status.split('_')[0] + "_idle"
-            print(self.status)
-            # self.status += 'right_idle'
         
         # if self.timers[use_attack].active:
         #     print("attack is be used")

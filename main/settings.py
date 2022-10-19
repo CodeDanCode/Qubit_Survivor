@@ -10,8 +10,7 @@ PLAYER_HEIGHT = 50
 size = (SCREEN_WIDTH, SCREEN_HEIGHT)
 
 RUN = True
-
-num_enemies = None
-player_turn = 'player turn'
-use_attack = 'use attack'
+NUM_ENEMIES = None
+PLAYER_TURN = 'player turn'
+USE_ATTACK = 'use attack'
 
