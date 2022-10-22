@@ -8,7 +8,7 @@ class Main:
         pygame.init()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
-        self.screen = Level()
+        self.level = Level()
 
 
     def run(self):
@@ -23,7 +23,7 @@ class Main:
                         sys.exit()
 
             dt = self.clock.tick() /1000
-            self.screen.run(dt)
+            self.level.run(dt)
             pygame.display.update()
 
 
