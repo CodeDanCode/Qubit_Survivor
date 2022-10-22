@@ -9,5 +9,5 @@ class Generic(pygame.sprite.Sprite):
         self.z = z
         # refers to all sprites using generic class including map 
         self.hitbox = self.rect.copy().inflate(-self.rect.width * 0.2, -self.rect.height * 0.75)
-        # self.hitbox = self.rect.copy().inflate(-self.rect.width*0.2, -self.rect.height *0.2)
+        
 

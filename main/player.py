@@ -34,8 +34,8 @@ class Player(pygame.sprite.Sprite):
         self.selected_attack = 'hoot'
 
         # for collision of sprite boxes
-        self.hitbox = self.rect.copy().inflate((-126,-70))
-        self.attack_box = self.rect.copy().inflate(self.rect.width * 0.3, self.rect.height * 0.3)
+        self.hitbox = self.rect.copy()
+        self.attackbox = self.rect.copy().inflate(self.rect.width * 4, self.rect.height * 4)
         self.collision_sprites = collision_sprites
 
     def import_assets(self):
@@ -128,7 +128,10 @@ class Player(pygame.sprite.Sprite):
                             self.hitbox.top = sprite.hitbox.bottom
                         self.rect.centery = self.hitbox.centery
                         self.pos.y = self.hitbox.centery
-
+            elif hasattr(sprite,'attackbox'):
+                if sprite.attackbox.colliderect(self.attackbox):
+                    print('attack box')
+                    # add attack phase here 
 
     def move(self,dt):
     
@@ -137,15 +140,15 @@ class Player(pygame.sprite.Sprite):
         #horizontal movement
         self.pos.x += self.direction.x * self.speed * dt
         self.hitbox.centerx = round(self.pos.x)
-        self.attack_box.centerx = round(self.pos.x)
-        self.rect.centerx = self.attack_box.centerx
+        self.attackbox.centerx = round(self.pos.x)
+        self.rect.centerx = self.hitbox.centerx
         self.collision('horizontal')
 
         #vertical movement
         self.pos.y += self.direction.y * self.speed * dt
         self.hitbox.centery = round(self.pos.y)
-        self.attack_box.centery = round(self.pos.y)
-        self.rect.centery = self.attack_box.centery
+        self.attackbox.centery = round(self.pos.y)
+        self.rect.centery = self.hitbox.centery
         self.collision('vertical')
       
     
@@ -167,8 +170,6 @@ class Enemy(pygame.sprite.Sprite):
         self.status = '_idle'
         self.frame_index = 0
 
-        # self.image = pygame.Surface((24,24))    
-        # self.circle = pygame.draw.circle(self.image,RED,(12,12),12)
         self.image = self.animations[self.status][self.frame_index]
         self.rect = self.image.get_rect(center = pos)
         self.z = LAYERS['main']
@@ -177,6 +178,9 @@ class Enemy(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2()
         self.pos = pygame.math.Vector2(self.rect.center)
         self.speed = 75
+
+        # self.hitbox = self.rect.copy()
+        self.attackbox = self.rect.copy()
         
 
     def import_assets(self):
@@ -211,13 +215,19 @@ class Enemy(pygame.sprite.Sprite):
         if self.rect.x > self.player.rect.x:
             self.status = LEFT
         self.pos.x += self.direction.x * self.speed * dt
-        self.rect.centerx = self.pos.x
+        # self.hitbox.centerx = round(self.pos.x)
+        self.attackbox.centerx = round(self.pos.x)
+        self.rect.centerx = self.attackbox.centerx
+        # self.rect.centerx = self.pos.x
         
         #vertical movement
         if self.rect.x < self.player.rect.x:
             self.status = RIGHT
         self.pos.y += self.direction.y * self.speed * dt
-        self.rect.centery = self.pos.y
+        # self.hitbox.centery = round(self.pos.y)
+        self.attackbox.centery = round(self.pos.y)
+        self.rect.centery = self.attackbox.centery
+        # self.rect.centery = self.pos.y
         
 
     def update(self,dt):

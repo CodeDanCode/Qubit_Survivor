@@ -23,19 +23,22 @@ ENEMY_BOSS_1 = 'boss_zombie'
 ENEMY_BOSS_2 = 'boss_robot'
 
 OVERLAYS ={
-    'health bar' : "healthbar"
+    'health bar' : "healthbar",
+    'sketch':'sketch_board'
 }
 
 PATHS = {
     'player base' : '../resources/character/',
     'enemy base' : '../resources/enemy/',
-    'overlay path' : '../resources/assets/'
+    'overlay path' : '../resources/assets/',
+    'data path' : '../resources/data/tmx/map.tmx'
 }
 
 
 OVERLAY_POSITIONS = {
-    'health bar' :(SCREEN_WIDTH - 125,50),
-    'progress bar' :(70, SCREEN_HEIGHT -5)
+    'health bar' :(SCREEN_WIDTH - 125,25),
+    'progress bar' :(70, SCREEN_HEIGHT -5),
+    'sketch' : (10,10)
 }
 
 COLORS = {
