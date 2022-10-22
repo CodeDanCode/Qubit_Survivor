@@ -38,7 +38,7 @@ PATHS = {
 OVERLAY_POSITIONS = {
     'health bar' :(SCREEN_WIDTH - 125,25),
     'progress bar' :(70, SCREEN_HEIGHT -5),
-    'sketch' : (10,10)
+    'sketch' : (10,5)
 }
 
 COLORS = {
