@@ -4,19 +4,22 @@ from support import *
 from timer import Timer
 
 
+
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, group,collision_sprites):
         super().__init__(group)
-        # Will use this for import character assets 
         self.import_assets()
         self.status = '_idle'
         self.frame_index = 0 
 
         # general sprite setup  
         self.image = pygame.Surface((32,64)) # remove temp surface 
-        self.image.fill(GREEN) # remove surface fill
+        self.image.fill(COLORS['red']) # remove surface fill
         # self.image = self.animations[self.status][self.frame_index]
         self.rect = self.image.get_rect(center = pos)
+        
+        self.z = LAYERS['main']
 
         # character movement variables
         self.direction = pygame.math.Vector2()
@@ -31,6 +34,7 @@ class Player(pygame.sprite.Sprite):
         self.selected_attack = 'hoot'
 
         # for collision of sprite boxes
+        self.hitbox = self.rect.copy().inflate((-126,-70))
         self.attack_box = self.rect.copy().inflate(self.rect.width * 0.3, self.rect.height * 0.3)
         self.collision_sprites = collision_sprites
 
@@ -39,7 +43,7 @@ class Player(pygame.sprite.Sprite):
                             'left_attack':[],'right_attack':[]}
 
         for animation in self.animations.keys():
-            full_path = "../resources/character/" + animation
+            full_path = PATHS['player base'] + animation
             self.animations[animation] = import_folder(full_path)
 
     def animate(self,dt):
@@ -63,19 +67,19 @@ class Player(pygame.sprite.Sprite):
         #  change if for player turn to not allow players to move. 
         if keys[pygame.K_UP]:
             self.direction.y = -1
-            self.status = 'up'
+            self.status = UP
         elif keys[pygame.K_DOWN]:
             self.direction.y = 1
-            self.status = 'down'
+            self.status = DOWN
         else:
             self.direction.y = 0
 
         if keys[pygame.K_RIGHT]:
             self.direction.x = 1
-            self.status = 'right'
+            self.status = LEFT
         elif keys[pygame.K_LEFT]:
             self.direction.x = -1
-            self.status = 'left'
+            self.status = RIGHT
         else:
             self.direction.x = 0
 
@@ -94,6 +98,7 @@ class Player(pygame.sprite.Sprite):
         if self.direction.magnitude() == 0:
             # self.status +=self.status.split('_')[0] + "idle"
             self.status += '_idle'
+
         if self.timers[USE_ATTACK].active:
             print("attack is be used")
         
@@ -104,19 +109,48 @@ class Player(pygame.sprite.Sprite):
         for timer in self.timers.values():
             timer.update()
 
+    def collision(self,direction):
+        for sprite in self.collision_sprites.sprites():
+            if hasattr(sprite,'hitbox'):
+                if sprite.hitbox.colliderect(self.hitbox):
+                    if direction == 'horizontal':
+                        if self.direction.x > 0:
+                            self.hitbox.right = sprite.hitbox.left
+                        if self.direction.x < 0: 
+                            self.hitbox.left = sprite.hitbox.right
+                        self.rect.centerx = self.hitbox.centerx
+                        self.pos.x = self.hitbox.centerx
+                    
+                    if direction == 'vertical':    
+                        if self.direction.y > 0:
+                            self.hitbox.bottom = sprite.hitbox.top
+                        if self.direction.y < 0:
+                            self.hitbox.top = sprite.hitbox.bottom
+                        self.rect.centery = self.hitbox.centery
+                        self.pos.y = self.hitbox.centery
+
+
     def move(self,dt):
     
         if self.direction.magnitude() > 0:
             self.direction = self.direction.normalize()
         #horizontal movement
         self.pos.x += self.direction.x * self.speed * dt
+        self.hitbox.centerx = round(self.pos.x)
         self.attack_box.centerx = round(self.pos.x)
         self.rect.centerx = self.attack_box.centerx
+        self.collision('horizontal')
+
         #vertical movement
         self.pos.y += self.direction.y * self.speed * dt
+        self.hitbox.centery = round(self.pos.y)
         self.attack_box.centery = round(self.pos.y)
         self.rect.centery = self.attack_box.centery
+        self.collision('vertical')
       
+    
+
+
     def update(self,dt):
         self.input()
         self.get_status()
@@ -128,7 +162,7 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self,pos,player,group):
         super().__init__(group)
 
-        self.enemy_type = 'zombie'
+        self.enemy_type = ENEMY_1
         self.import_assets()
         self.status = '_idle'
         self.frame_index = 0
@@ -137,6 +171,7 @@ class Enemy(pygame.sprite.Sprite):
         # self.circle = pygame.draw.circle(self.image,RED,(12,12),12)
         self.image = self.animations[self.status][self.frame_index]
         self.rect = self.image.get_rect(center = pos)
+        self.z = LAYERS['main']
       
         self.player = player
         self.direction = pygame.math.Vector2()
@@ -147,7 +182,7 @@ class Enemy(pygame.sprite.Sprite):
     def import_assets(self):
         self.animations = {'_idle':[],'left_idle':[],'left':[],'right_idle':[],'right':[]}
         for animation in self.animations.keys():
-            full_path = "../resources/enemy/"+ self.enemy_type +"/"+ animation
+            full_path = PATHS['enemy base']+ self.enemy_type +"/"+ animation
             self.animations[animation] = import_folder(full_path)
     
     def animate(self,dt):
@@ -174,13 +209,13 @@ class Enemy(pygame.sprite.Sprite):
             self.direction = self.direction.normalize()
         #horizontal movement
         if self.rect.x > self.player.rect.x:
-            self.status = 'left'
+            self.status = LEFT
         self.pos.x += self.direction.x * self.speed * dt
         self.rect.centerx = self.pos.x
         
         #vertical movement
         if self.rect.x < self.player.rect.x:
-            self.status = 'right'
+            self.status = RIGHT
         self.pos.y += self.direction.y * self.speed * dt
         self.rect.centery = self.pos.y
         
