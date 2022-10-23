@@ -3,6 +3,8 @@ from pygame import Vector2
 SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 600
 TILE_SIZE = 64
+WINDOW_WIDTH = 950
+WINDOW_HEIGHT = 580
 
 
 RUN = True
@@ -55,3 +57,9 @@ LAYERS = {
     'items':2
 }
 
+SPAWN_LOCATION ={
+    'top' : -180,
+    'bottom': WINDOW_HEIGHT + 180,
+    'left': -180,
+    'right': WINDOW_WIDTH + 180
+}

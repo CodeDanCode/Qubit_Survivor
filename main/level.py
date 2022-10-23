@@ -23,7 +23,7 @@ class Level:
         for x,y,surf in tmx_data.get_layer_by_name('collision').tiles():
             Generic((x*TILE_SIZE,y*TILE_SIZE), pygame.Surface((TILE_SIZE,TILE_SIZE)), self.collision_sprites)
            
-        self.player = Player((600,300),self.all_sprites,self.collision_sprites)
+        self.player = Player((SCREEN_WIDTH/2,SCREEN_HEIGHT/2),self.all_sprites,self.collision_sprites)
         
         Generic(
             pos = (0,0),
@@ -32,15 +32,16 @@ class Level:
             z = LAYERS['ground']
         )
        
+        Spawn(self.player,[self.all_sprites,self.collision_sprites])
         
-        self.enemy = Enemy((100,100),self.player,[self.all_sprites,self.collision_sprites])
-        self.enemy = Enemy((100,200),self.player,[self.all_sprites,self.collision_sprites])
+        # self.enemy = Enemy((100,100),self.player,[self.all_sprites,self.collision_sprites])
+        # self.enemy = Enemy((100,200),self.player,[self.all_sprites,self.collision_sprites])
+        
         # self.enemy = Enemy((loc,loc),self.player,self.all_sprites)
         # self.enemy = Enemy((loc*2,loc),self.player,self.all_sprites)
 
     def run(self, dt):
         self.display_surface.fill(COLORS['blue'])
-        # self.all_sprites.draw(self.display_surface)
         self.all_sprites.custom_draw(self.player)
         self.all_sprites.update(dt)
         self.overlay.display()
@@ -49,15 +50,15 @@ class CameraGroup(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
         self.display_surface = pygame.display.get_surface()
-        self.custom_surface = pygame.Surface((950,580))
+        self.custom_surface = pygame.Surface((WINDOW_WIDTH,WINDOW_HEIGHT))
         self.offset = pygame.math.Vector2()
 
 
     def custom_draw(self, player):
         # self.offset.x = (player.rect.centerx - SCREEN_WIDTH / 2)
         # self.offset.y = (player.rect.centery - SCREEN_HEIGHT / 2)
-        self.offset.x = (player.rect.centerx - 950/2)
-        self.offset.y = (player.rect.centery - 580/2)
+        self.offset.x = (player.rect.centerx - WINDOW_WIDTH/2)
+        self.offset.y = (player.rect.centery - WINDOW_HEIGHT/2)
 
         for layer in LAYERS.values():
             for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):

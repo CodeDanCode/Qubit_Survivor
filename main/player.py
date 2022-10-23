@@ -2,6 +2,7 @@ import pygame
 from settings import *
 from support import *
 from timer import Timer
+import random
 
 
 
@@ -128,9 +129,9 @@ class Player(pygame.sprite.Sprite):
                             self.hitbox.top = sprite.hitbox.bottom
                         self.rect.centery = self.hitbox.centery
                         self.pos.y = self.hitbox.centery
-            elif hasattr(sprite,'attackbox'):
-                if sprite.attackbox.colliderect(self.attackbox):
-                    print('attack box')
+            # elif hasattr(sprite,'attackbox'):
+            #     if sprite.attackbox.colliderect(self.attackbox):
+            #         # print('attack box')
                     # add attack phase here 
 
     def move(self,dt):
@@ -236,3 +237,27 @@ class Enemy(pygame.sprite.Sprite):
         self.get_status()
         self.move(dt)
         self.animate(dt)
+
+
+class Spawn:
+    def __init__(self,player,group):
+        self.player = player
+        self.group = group
+        self.setup()
+
+
+    def setup(self):
+        side = ['top','bottom','left','right']
+        
+        # Enemy((SPAWN_LOCATION['right'],SPAWN_LOCATION['top']),self.player,self.group)
+
+
+        for i in range(random.randrange(4,15)):            
+            choice1 = random.choice(side)
+            choice2 = random.choice(side)
+            print(SPAWN_LOCATION[choice1],SPAWN_LOCATION[choice2])
+            Enemy((SPAWN_LOCATION[choice1],SPAWN_LOCATION[choice2]),self.player,self.group)
+            
+         
+
+        
