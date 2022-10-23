@@ -181,6 +181,7 @@ class Enemy(pygame.sprite.Sprite):
 
         # self.hitbox = self.rect.copy()
         self.attackbox = self.rect.copy()
+        self.enemyHitbox = self.rect.copy()
         
 
     def import_assets(self):
@@ -205,6 +206,7 @@ class Enemy(pygame.sprite.Sprite):
         
         # if self.timers[player_turn].active:
             # print("player turn: " + str(self.timers[player_turn].active))
+
 
     def move(self,dt):
 

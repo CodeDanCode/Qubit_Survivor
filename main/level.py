@@ -34,11 +34,12 @@ class Level:
        
         
         self.enemy = Enemy((100,100),self.player,[self.all_sprites,self.collision_sprites])
+        self.enemy = Enemy((100,200),self.player,[self.all_sprites,self.collision_sprites])
         # self.enemy = Enemy((loc,loc),self.player,self.all_sprites)
         # self.enemy = Enemy((loc*2,loc),self.player,self.all_sprites)
 
     def run(self, dt):
-        self.display_surface.fill(COLORS['red'])
+        self.display_surface.fill(COLORS['blue'])
         # self.all_sprites.draw(self.display_surface)
         self.all_sprites.custom_draw(self.player)
         self.all_sprites.update(dt)
