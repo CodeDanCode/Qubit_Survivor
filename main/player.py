@@ -2,6 +2,7 @@ import pygame
 from settings import *
 from support import *
 from timer import Timer
+from attack import *
 import random
 
 
@@ -13,13 +14,12 @@ class Player(pygame.sprite.Sprite):
         self.import_assets()
         self.status = '_idle'
         self.frame_index = 0 
-
+        self.pos = pos
         # general sprite setup  
         self.image = pygame.Surface((32,64)) # remove temp surface 
         self.image.fill(COLORS['red']) # remove surface fill
         # self.image = self.animations[self.status][self.frame_index]
-        self.rect = self.image.get_rect(center = pos)
-        
+        self.rect = self.image.get_rect(center = pos)  
         self.z = LAYERS['main']
 
         # character movement variables
@@ -34,10 +34,11 @@ class Player(pygame.sprite.Sprite):
 
         self.selected_attack = 'hoot'
 
-        # for collision of sprite boxes
+        # collision boxes
         self.hitbox = self.rect.copy()
         self.attackbox = self.rect.copy().inflate(self.rect.width * 4, self.rect.height * 4)
         self.collision_sprites = collision_sprites
+        self.group = group
 
     def import_assets(self):
         self.animations = {'_idle':[],'up':[],'down':[],'left':[],'right':[],
@@ -101,8 +102,9 @@ class Player(pygame.sprite.Sprite):
             self.status += '_idle'
 
         if self.timers[USE_ATTACK].active:
-            print("attack is be used")
-        
+            Shoot(self,self.group,self.collision_sprites)
+            print("shoot line")
+  
         # if self.timers[player_turn].active:
             # print("player turn: " + str(self.timers[player_turn].active))
     
@@ -152,9 +154,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.centery = self.hitbox.centery
         self.collision('vertical')
       
-    
-
-
     def update(self,dt):
         self.input()
         self.get_status()
@@ -218,19 +217,17 @@ class Enemy(pygame.sprite.Sprite):
         if self.rect.x > self.player.rect.x:
             self.status = LEFT
         self.pos.x += self.direction.x * self.speed * dt
-        # self.hitbox.centerx = round(self.pos.x)
         self.attackbox.centerx = round(self.pos.x)
+        self.enemyHitbox.centerx = round(self.pos.x)
         self.rect.centerx = self.attackbox.centerx
-        # self.rect.centerx = self.pos.x
         
         #vertical movement
         if self.rect.x < self.player.rect.x:
             self.status = RIGHT
         self.pos.y += self.direction.y * self.speed * dt
-        # self.hitbox.centery = round(self.pos.y)
         self.attackbox.centery = round(self.pos.y)
+        self.enemyHitbox.centery = round(self.pos.y)
         self.rect.centery = self.attackbox.centery
-        # self.rect.centery = self.pos.y
         
 
     def update(self,dt):
@@ -249,13 +246,10 @@ class Spawn:
     def setup(self):
         side = ['top','bottom','left','right']
         
-        # Enemy((SPAWN_LOCATION['right'],SPAWN_LOCATION['top']),self.player,self.group)
-
-
         for i in range(random.randrange(4,15)):            
             choice1 = random.choice(side)
             choice2 = random.choice(side)
-            print(SPAWN_LOCATION[choice1],SPAWN_LOCATION[choice2])
+            # print(SPAWN_LOCATION[choice1],SPAWN_LOCATION[choice2])
             Enemy((SPAWN_LOCATION[choice1],SPAWN_LOCATION[choice2]),self.player,self.group)
             
          
