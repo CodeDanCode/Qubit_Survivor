@@ -1,7 +1,6 @@
 import pygame
 from settings import *
 from support import *
-from debug import *
 from timers import Timer
 
 
@@ -9,7 +8,6 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos, group,collision_sprites,enemy_sprites):
         super().__init__(group)
         self.import_assets()
-        
 
         self.status = 'right_idle'
         self.frame_index = 0 
@@ -45,7 +43,6 @@ class Player(pygame.sprite.Sprite):
         self.weapons = ['hoot','wing'] # add wing when ready
         self.weapon_index = 0
         self.selected_weapon = self.weapons[self.weapon_index]
-
 
     def temp_player(self,pos):
          # general sprite setup  
@@ -120,7 +117,6 @@ class Player(pygame.sprite.Sprite):
                 self.weapon_index +=1
                 self.weapon_index = self.weapon_index if self.weapon_index < len(self.weapons) else 0
                 self.selected_weapon = self.weapons[self.weapon_index]
-
 
     def get_status(self):
 

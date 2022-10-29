@@ -8,10 +8,20 @@ WINDOW_HEIGHT = 580
 
 BAR_HEIGHT = 20
 HEALTH_BAR_WIDTH = 200
-# ENERGY_BAR_WIDTH = 140
 ITEM_BOX_SIZE = 80
-FONT_SIZE = 18
+
+FONT = 'comicsansms'
+FONT_SIZE = {
+    'small' : 25,
+    'medium' : 50,
+    'large': 85
+}
+
+TEXT_COLOR = '#EEEEEE'
+HEALTH_COLOR = 'red'
+
 UI_BG_COLOR = '#222222'
+UI_BORDER_COLOR ='#111111'
 UI_BORDER_COLOR_ACTIVE = 'gold'
 
 
@@ -38,7 +48,6 @@ PATHS = {
     'overlay path' : '../resources/assets/',
     'data path' : '../resources/data/tmx/map.tmx'
 }
-
 
 OVERLAY_POSITIONS = {
     'health bar' :(SCREEN_WIDTH - 125,25),
@@ -67,12 +76,6 @@ SPAWN_LOCATION ={
     'right': WINDOW_WIDTH + 180
 }
 
-FONT = 'comicsansms'
-FONT_SIZE = {
-    'small' : 25,
-    'medium' : 50,
-    'large': 85
-}
 
 PLAYER_HOOT_OFFSET = {
     'left':Vector2(-50,0), # 40
@@ -86,7 +89,9 @@ PLAYER_WING_OFFSET = {
     'right': Vector2(100,0),
     'up': Vector2(0,-100),
     'down': Vector2(0,100)
-
-
 }
 
+weapon_data = {
+    'hoot' : {'cooldown': 100, 'damage': 15, 'graphic': '../resources/assets/hoot.png'},
+    'wing' : {'cooldown': 400, 'damage' : 30, 'graphic': '../resources/assets/wing.png'}
+}
