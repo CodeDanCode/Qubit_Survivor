@@ -6,11 +6,14 @@ TILE_SIZE = 64
 WINDOW_WIDTH = 950
 WINDOW_HEIGHT = 580
 
+BAR_HEIGHT = 20
+HEALTH_BAR_WIDTH = 200
+# ENERGY_BAR_WIDTH = 140
+ITEM_BOX_SIZE = 80
+FONT_SIZE = 18
+UI_BG_COLOR = '#222222'
+UI_BORDER_COLOR_ACTIVE = 'gold'
 
-RUN = True
-NUM_ENEMIES = None
-PLAYER_TURN = 'player turn'
-USE_ATTACK = 'use attack'
 
 # control direction
 UP = 'up'
@@ -63,3 +66,27 @@ SPAWN_LOCATION ={
     'left': -180,
     'right': WINDOW_WIDTH + 180
 }
+
+FONT = 'comicsansms'
+FONT_SIZE = {
+    'small' : 25,
+    'medium' : 50,
+    'large': 85
+}
+
+PLAYER_HOOT_OFFSET = {
+    'left':Vector2(-50,0), # 40
+    'right':Vector2(50,0), # 40
+    'up': Vector2(0,-50),
+    'down':Vector2(0,50)
+}
+
+PLAYER_WING_OFFSET = {
+    'left': Vector2(-100,0),
+    'right': Vector2(100,0),
+    'up': Vector2(0,-100),
+    'down': Vector2(0,100)
+
+
+}
+
