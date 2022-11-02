@@ -16,22 +16,21 @@ class Player(pygame.sprite.Sprite):
 
         self.direction = pygame.math.Vector2()
         self.pos = pygame.math.Vector2(self.rect.center)
-        # self.speed = 200
 
-        # self.health = 100
-        # self.damage = 25
-        # self.level = 1
-
-        self.stats = {'health':100 , 'energy':60, 'damage': 10,'speed': 200, 'level': 1, 'exp':123}
+        self.stats = {'health':100 , 'attack': 10,'speed': 200, 'level': 1, 'exp':100}
         self.health = self.stats['health'] 
-        self.damage = self.stats['damage']
+        self.attack = self.stats['attack']
         self.exp = self.stats['exp']
         self.speed = self.stats['speed']
+        self.level = self.stats['level']
+
+
 
 
         self.hitbox = self.rect.copy()
-        self.attackbox = self.rect.copy().inflate(self.rect.width * 6, self.rect.width * 6)
-        
+        self.attackbox = self.rect.copy().inflate(self.rect.width * 20, self.rect.width * 20)
+        self.enemybox = self.rect.copy().inflate(self.rect.width * 2, self.rect.height *2)
+
         self.collision_sprites = collision_sprites
         self.enemy_sprites = enemy_sprites
 
@@ -46,7 +45,7 @@ class Player(pygame.sprite.Sprite):
 
     def temp_player(self,pos):
          # general sprite setup  
-        self.image = pygame.Surface((32,64)) # remove temp surface 
+        self.image = pygame.Surface((16,32)) # remove temp surface 
         self.image.fill(COLORS['red']) # remove surface fill
         # use below for player sprite animation when recieved
         # self.image = self.animations[self.status][self.frame_index]
@@ -67,11 +66,12 @@ class Player(pygame.sprite.Sprite):
             self.frame_index = 0
         self.image = self.animations[self.status][int(self.frame_index)]
 
+
     def use_weapon(self):
-        print(self.selected_weapon)
         if self.selected_weapon == 'hoot':
             for enemy in self.enemy_sprites.sprites():
                 if enemy.rect.collidepoint(self.target_pos):
+                    print(self.attack + weapon_data[self.selected_weapon]['damage'])
                     enemy.damage()
 
         if self.selected_weapon == 'wing':
@@ -158,6 +158,7 @@ class Player(pygame.sprite.Sprite):
         self.pos.x += self.direction.x * self.speed * dt
         self.hitbox.centerx = round(self.pos.x)
         self.attackbox.centerx = round(self.pos.x)
+        self.enemybox.centerx = round(self.pos.x)
         self.rect.centerx = self.hitbox.centerx
         self.collision('horizontal')
 
@@ -165,6 +166,7 @@ class Player(pygame.sprite.Sprite):
         self.pos.y += self.direction.y * self.speed * dt
         self.hitbox.centery = round(self.pos.y)
         self.attackbox.centery = round(self.pos.y)
+        self.enemybox.centery = round(self.pos.y)
         self.rect.centery = self.hitbox.centery
         self.collision('vertical')
 

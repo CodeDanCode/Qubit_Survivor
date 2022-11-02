@@ -6,6 +6,7 @@ from sprites import *
 from pytmx.util_pygame import load_pygame
 import random
 from enemy import *
+from timers import Timer
 
 class Level:
     def __init__(self):
@@ -37,8 +38,8 @@ class Level:
             z = LAYERS['ground']
         )
        
-        # Spawn(self.player,[self.all_sprites,self.collision_sprites,self.enemy_sprites])
-        self.enemy = Enemy((SPAWN_LOCATION['top'],SPAWN_LOCATION['top']),self.player,[self.all_sprites,self.collision_sprites,self.enemy_sprites])
+        self.enemy = Spawn(self.player,[self.all_sprites,self.collision_sprites,self.enemy_sprites])
+        # self.enemy = Enemy((SPAWN_LOCATION['top'],SPAWN_LOCATION['top']),self.player,[self.all_sprites,self.collision_sprites,self.enemy_sprites])
 
     def run(self, dt):
         self.display_surface.fill(COLORS['blue'])
@@ -64,23 +65,25 @@ class CameraGroup(pygame.sprite.Group):
                     offset_rect = sprite.rect.copy()
                     offset_rect.center -= self.offset
                     
-                    self.custom_surface.blit(sprite.image,offset_rect)
-                    self.display_surface.blit(self.custom_surface,(240,5))
+                   
+                    if sprite == player:
+                        pygame.draw.circle(self.custom_surface,'yellow',offset_rect.center,5)
+                        attackbox_rect = player.attackbox.copy()
+                        attackbox_rect.center = offset_rect.center
+                        pygame.draw.rect(self.custom_surface,COLORS['blue'],attackbox_rect,5)
+                        hitbox_rect = player.hitbox.copy()
+                        hitbox_rect.center = offset_rect.center
+                        pygame.draw.rect(self.custom_surface,COLORS['green'],hitbox_rect,5)
+                        
+                        enemy_rect = player.enemybox.copy()
+                        enemy_rect.center = offset_rect.center
+                        pygame.draw.rect(self.custom_surface,'orange',enemy_rect,5)
 
-
-
-                    # if sprite == player:
-                    #     pygame.draw.circle(self.custom_surface,'yellow',offset_rect.center,5)
-                    #     attackbox_rect = player.attackbox.copy()
-                    #     attackbox_rect.center = offset_rect.center
-                    #     pygame.draw.rect(self.custom_surface,COLORS['blue'],attackbox_rect,5)
-                    #     hitbox_rect = player.hitbox.copy()
-                    #     hitbox_rect.center = offset_rect.center
-                    #     pygame.draw.rect(self.custom_surface,COLORS['green'],hitbox_rect,5)
-                    #     target_hoot_pos = offset_rect.center + PLAYER_HOOT_OFFSET[player.status.split('_')[0]]
-                    #     pygame.draw.circle(self.custom_surface,'blue',target_hoot_pos,5)
-                    #     target_wing_pos = offset_rect.center + PLAYER_WING_OFFSET[player.status.split('_')[0]]
-                    #     pygame.draw.circle(self.custom_surface,'purple',target_wing_pos,5)
+                        target_hoot_pos = offset_rect.center + PLAYER_HOOT_OFFSET[player.status.split('_')[0]]
+                        pygame.draw.circle(self.custom_surface,'blue',target_hoot_pos,5)
+                        
+                        target_wing_pos = offset_rect.center + PLAYER_WING_OFFSET[player.status.split('_')[0]]
+                        pygame.draw.circle(self.custom_surface,'purple',target_wing_pos,5)
 
 
 
@@ -92,6 +95,9 @@ class CameraGroup(pygame.sprite.Group):
                     #     hitbox_rect = enemy.hitbox.copy()
                     #     hitbox_rect.center = offset_rect.center
                     #     pygame.draw.rect(self.custom_surface,COLORS['green'],hitbox_rect,5)
+
+                    self.custom_surface.blit(sprite.image,offset_rect)
+                    self.display_surface.blit(self.custom_surface,(240,5))
 
 class Spawn:
     def __init__(self,player,group):
@@ -107,6 +113,6 @@ class Spawn:
             choice1 = random.choice(side)
             choice2 = random.choice(side)
             # print(SPAWN_LOCATION[choice1],SPAWN_LOCATION[choice2])
-            self.enemy = Enemy((SPAWN_LOCATION[choice1],SPAWN_LOCATION[choice2]),self.player,self.group)
+            self.enemy = Enemy((SPAWN_LOCATION[choice1],SPAWN_LOCATION[choice2]),self.player,self.group,ENEMY_1)
         return self.enemy
          

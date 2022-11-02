@@ -13,6 +13,12 @@ class Overlay:
         y = 20
         self.health_bar_rect = pygame.Rect(x,y,HEALTH_BAR_WIDTH, BAR_HEIGHT)
 
+        self.weapon_graphics = []
+        for weapon in weapon_data.values():
+            weapon = pygame.image.load(weapon['graphic']).convert_alpha()
+            self.weapon_graphics.append(weapon)
+
+
         # self.health_bar_rect = pygame.Rect(OVERLAY_POSITIONS['health bar'][0],OVERLAY_POSITIONS['health bar'][1],HEALTH_BAR_WIDTH, BAR_HEIGHT)
 
 
@@ -33,13 +39,13 @@ class Overlay:
         pygame.draw.rect(self.display_surface,UI_BG_COLOR,current_rect,3)
 
     def show_exp(self,exp):
-        text_surf = self.font.render(str(int(exp)),False,TEXT_COLOR)
+        text_surf = self.font.render(str(int(exp)),False,'black')
         x = self.display_surface.get_size()[0] -  (WINDOW_WIDTH/2)
         y = 30
         text_rect = text_surf.get_rect(center = (x,y))
-        pygame.draw.rect(self.display_surface,UI_BG_COLOR,text_rect.inflate(10,10))
+        # pygame.draw.rect(self.display_surface,UI_BG_COLOR,text_rect.inflate(10,10))
         self.display_surface.blit(text_surf,text_rect)
-        pygame.draw.rect(self.display_surface,UI_BORDER_COLOR,text_rect.inflate(10,10),3)
+        # pygame.draw.rect(self.display_surface,UI_BORDER_COLOR,text_rect.inflate(10,10),3)
 
     def selection_box(self,left,top):
         bg_rect = pygame.Rect(left,top, ITEM_BOX_SIZE,ITEM_BOX_SIZE)
@@ -50,15 +56,16 @@ class Overlay:
     def weapon_overlay(self, weapon_index):
         
         bg_rect = self.selection_box(SCREEN_WIDTH - (ITEM_BOX_SIZE + 20), SCREEN_HEIGHT - (ITEM_BOX_SIZE + 20))
-
-        # self.display_surface.blit(weapon_surf,bg_rect)/
+        weapon_surf = self.weapon_graphics[weapon_index]
+        weapon_rect =weapon_surf.get_rect(center = bg_rect.center)
+        self.display_surface.blit(weapon_surf,weapon_rect)
 
 
     def display(self):
         # pygame.draw.rect(self.display_surface,'black',self.health_bar_rect)
         self.show_bar(self.player.health,self.player.stats['health'],self.health_bar_rect,'red')
-        self.show_exp(self.player.exp)
-        # self.weapon_overlay(self.player.weapon_index)
+        self.show_exp(self.player.level)
+        self.weapon_overlay(self.player.weapon_index)
 
         # self.health_surf = pygame.transform.scale(self.health_surf,(232,45))
         # self.health_rect = self.health_surf.get_rect(midtop=OVERLAY_POSITIONS['health bar'])

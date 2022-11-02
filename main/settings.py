@@ -78,17 +78,17 @@ SPAWN_LOCATION ={
 
 
 PLAYER_HOOT_OFFSET = {
-    'left':Vector2(-50,0), # 40
-    'right':Vector2(50,0), # 40
-    'up': Vector2(0,-50),
-    'down':Vector2(0,50)
+    'left':Vector2(-80,0), # 40
+    'right':Vector2(80,0), # 40
+    'up': Vector2(0,-80),
+    'down':Vector2(0,80)
 }
 
 PLAYER_WING_OFFSET = {
-    'left': Vector2(-100,0),
-    'right': Vector2(100,0),
-    'up': Vector2(0,-100),
-    'down': Vector2(0,100)
+    'left': Vector2(-165,0),
+    'right': Vector2(165,0),
+    'up': Vector2(0,-165),
+    'down': Vector2(0,165)
 }
 
 weapon_data = {
