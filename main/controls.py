@@ -27,15 +27,15 @@ class Controls:
                 self.player.direction.x = 0
 
             if keys[pygame.K_SPACE]:
-                self.timers['weapon use'].activate()
-                self.direction = pygame.math.Vector2()
-                self.frame_index = 0
+                self.player.timers['weapon use'].activate()
+                self.player.direction = pygame.math.Vector2()
+                self.player.frame_index = 0
 
-            if keys[pygame.K_e] and not self.timers['weapon switch'].active:
-                self.timers['weapon switch'].activate()
-                self.weapon_index +=1
-                self.weapon_index = self.weapon_index if self.weapon_index < len(self.weapons) else 0
-                self.selected_weapon = self.weapons[self.weapon_index]
+            if keys[pygame.K_e] and not self.player.timers['weapon switch'].active:
+                self.player.timers['weapon switch'].activate()
+                self.player.weapon_index +=1
+                self.player.weapon_index = self.player.weapon_index if self.player.weapon_index < len(self.player.weapons) else 0
+                self.player.selected_weapon = self.player.weapons[self.player.weapon_index]
 
     def medium_contorls(self):
         pass
