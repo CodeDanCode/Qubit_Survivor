@@ -26,9 +26,9 @@ class Enemy(pygame.sprite.Sprite):
         self.health = 25
 
 
-        self.hitbox = self.rect.copy().inflate((-60,0))
+        # self.hitbox = self.rect.copy().inflate((-60,0))
         self.attackbox = self.rect.copy()
-        self.enemyHitbox = self.rect.copy()
+        self.enemybox = self.rect.copy()
 
         self.collide = False        
 
@@ -52,53 +52,55 @@ class Enemy(pygame.sprite.Sprite):
     def collision(self,direction):
         for sprite in self.group[0].sprites():
             if sprite == self.player:
-                if sprite.enemybox.colliderect(self.hitbox):
-                    self.direction = pygame.math.Vector2() 
+                if sprite.enemybox.colliderect(self.enemybox):
+                    # self.direction = pygame.math.Vector2() 
                     if direction == 'horizontal':
                         if self.direction.x > 0:
-                            self.hitbox.right = sprite.enemybox.left
+                            self.enemybox.right = sprite.enemybox.left
                         if self.direction.x < 0: 
-                            self.hitbox.left = sprite.enemybox.right
-                        self.rect.centerx = self.hitbox.centerx
-                        self.pos.x = self.hitbox.centerx
+                            self.enemybox.left = sprite.enemybox.right
+                        self.rect.centerx = self.enemybox.centerx
+                        self.pos.x = self.enemybox.centerx
                     
                     if direction == 'vertical':
-                          
                         if self.direction.y > 0:
-                            self.hitbox.bottom = sprite.enemybox.top
+                            self.enemybox.bottom = sprite.enemybox.top
                         if self.direction.y < 0:
-                            self.hitbox.top = sprite.enemybox.bottom
-                        self.rect.centery = self.hitbox.centery
-                        self.pos.y = self.hitbox.centery
+                            self.enemybox.top = sprite.enemybox.bottom
+                        self.rect.centery = self.enemybox.centery
+                        self.pos.y = self.enemybox.centery
 
 
     def move(self,dt):
         
 
-        self.direction.x, self.direction.y = self.player.rect.x - self.rect.x, self.player.rect.y - self.rect.y
-  
+        # self.direction.x, self.direction.y = self.player.rect.x - self.rect.x, self.player.rect.y - self.rect.y
+
+        enemy_vec = pygame.math.Vector2(self.rect.center)
+        player_vec = pygame.math.Vector2(self.player.rect.center)
+        self.direction = (player_vec - enemy_vec).normalize()
         
-        if self.direction.magnitude() > 0:
-            self.direction = self.direction.normalize()
-        
-        #horizontal movement
+        # if self.direction.magnitude() > 0:
+        #     self.direction = self.direction.normalize()
+
         if self.rect.x > self.player.rect.x:
             self.status = LEFT
+        if self.rect.x < self.player.rect.x:
+            self.status = RIGHT
+
+        #horizontal movement
         self.pos.x += self.direction.x * self.speed * dt
-        self.hitbox.centerx = round(self.pos.x)
         self.attackbox.centerx = round(self.pos.x)
-        self.enemyHitbox.centerx = round(self.pos.x)
+        self.enemybox.centerx = round(self.pos.x)
         self.rect.centerx = self.attackbox.centerx
         self.collision('horizontal')
     
         
         #vertical movement
-        if self.rect.x < self.player.rect.x:
-            self.status = RIGHT
+
         self.pos.y += self.direction.y * self.speed * dt
-        self.hitbox.centery = round(self.pos.y)
         self.attackbox.centery = round(self.pos.y)
-        self.enemyHitbox.centery = round(self.pos.y)
+        self.enemybox.centery = round(self.pos.y)
         self.rect.centery = self.attackbox.centery
         self.collision('vertical')
 
@@ -109,7 +111,7 @@ class Enemy(pygame.sprite.Sprite):
         if self.health <= 0:
             self.kill()
 
-    def update(self,dt):
+    def update(self,dt,selected):
         self.get_status()
         self.move(dt)
         self.animate(dt)

@@ -11,7 +11,6 @@ from timers import Timer
 class Level:
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
-        
         self.all_sprites = CameraGroup()
         self.collision_sprites = pygame.sprite.Group()
         self.enemy_sprites = pygame.sprite.Group()
@@ -41,10 +40,10 @@ class Level:
         self.enemy = Spawn(self.player,[self.all_sprites,self.collision_sprites,self.enemy_sprites])
         # self.enemy = Enemy((SPAWN_LOCATION['top'],SPAWN_LOCATION['top']),self.player,[self.all_sprites,self.collision_sprites,self.enemy_sprites])
 
-    def run(self, dt):
+    def run(self, dt,selected):
         self.display_surface.fill(COLORS['blue'])
         self.all_sprites.custom_draw(self.player,self.enemy)
-        self.all_sprites.update(dt)
+        self.all_sprites.update(dt,selected)
         self.overlay.display()
 
 class CameraGroup(pygame.sprite.Group):

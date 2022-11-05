@@ -2,12 +2,14 @@ import pygame
 from settings import *
 from support import *
 from timers import Timer
+from controls import *
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, group,collision_sprites,enemy_sprites):
         super().__init__(group)
         self.import_assets()
+        self.controls = Controls(self)
 
         self.status = 'right_idle'
         self.frame_index = 0 
@@ -86,40 +88,47 @@ class Player(pygame.sprite.Sprite):
         if self.selected_weapon == 'wing':
             self.target_pos = self.rect.center + PLAYER_WING_OFFSET[self.status.split('_')[0]]
 
-    def input(self):
-        keys = pygame.key.get_pressed()
-        if not self.timers['weapon use'].active:
-            if keys[pygame.K_UP]:
-                self.direction.y = -1
-                self.status = UP
-            elif keys[pygame.K_DOWN]:
-                self.direction.y = 1
-                self.status = DOWN
-            else:
-                self.direction.y = 0
+    def control(self,selected):
+        if selected == 'easy':
+            self.controls.easy_controls()
+        if selected == 'normal':
+            pass
+        if selected == 'hard':
+            pass
 
-            if keys[pygame.K_RIGHT]:
-                self.direction.x = 1
-                self.status = RIGHT
-            elif keys[pygame.K_LEFT]:
-                self.direction.x = -1
-                self.status = LEFT
-            else:
-                self.direction.x = 0
+    # def input(self):
+    #     keys = pygame.key.get_pressed()
+    #     if not self.timers['weapon use'].active:
+    #         if keys[pygame.K_UP]:
+    #             self.direction.y = -1
+    #             self.status = UP
+    #         elif keys[pygame.K_DOWN]:
+    #             self.direction.y = 1
+    #             self.status = DOWN
+    #         else:
+    #             self.direction.y = 0
 
-            if keys[pygame.K_SPACE]:
-                self.timers['weapon use'].activate()
-                self.direction = pygame.math.Vector2()
-                self.frame_index = 0
+    #         if keys[pygame.K_RIGHT]:
+    #             self.direction.x = 1
+    #             self.status = RIGHT
+    #         elif keys[pygame.K_LEFT]:
+    #             self.direction.x = -1
+    #             self.status = LEFT
+    #         else:
+    #             self.direction.x = 0
 
-            if keys[pygame.K_e] and not self.timers['weapon switch'].active:
-                self.timers['weapon switch'].activate()
-                self.weapon_index +=1
-                self.weapon_index = self.weapon_index if self.weapon_index < len(self.weapons) else 0
-                self.selected_weapon = self.weapons[self.weapon_index]
+    #         if keys[pygame.K_SPACE]:
+    #             self.timers['weapon use'].activate()
+    #             self.direction = pygame.math.Vector2()
+    #             self.frame_index = 0
+
+    #         if keys[pygame.K_e] and not self.timers['weapon switch'].active:
+    #             self.timers['weapon switch'].activate()
+    #             self.weapon_index +=1
+    #             self.weapon_index = self.weapon_index if self.weapon_index < len(self.weapons) else 0
+    #             self.selected_weapon = self.weapons[self.weapon_index]
 
     def get_status(self):
-
         if self.direction.magnitude() == 0:
             self.status = self.status.split('_')[0] + "_idle"
             # self.status += '_idle'
@@ -175,8 +184,9 @@ class Player(pygame.sprite.Sprite):
         for timer in self.timers.values():
             timer.update()
 
-    def update(self,dt):
-        self.input()
+    def update(self,dt,selected):
+        # self.input()
+        self.control(selected)
         self.get_status()
         self.update_timers()
         self.get_target_pos()
