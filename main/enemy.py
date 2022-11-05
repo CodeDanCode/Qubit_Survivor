@@ -21,13 +21,14 @@ class Enemy(pygame.sprite.Sprite):
         self.player = player
         self.direction = pygame.math.Vector2()
         self.pos = pygame.math.Vector2(self.rect.center)
-        self.speed = 75
-
-        self.health = 25
+        self.speed_status = False
+        self.stats = {'health': 25,'speed': 75}
+        self.speed = self.stats['speed']
+        self.health = self.stats['health']
 
 
         # self.hitbox = self.rect.copy().inflate((-60,0))
-        self.attackbox = self.rect.copy()
+        # self.attackbox = self.rect.copy()
         self.enemybox = self.rect.copy()
 
         self.collide = False        
@@ -48,6 +49,11 @@ class Enemy(pygame.sprite.Sprite):
 
         if self.direction.magnitude() == 0:
             self.status = self.status.split('_')[0] + "_idle"
+
+        if self.speed_status == True:
+            self.speed = self.stats['speed']* 0.5
+        else:
+            self.speed = self.stats['speed']
         
     def collision(self,direction):
         for sprite in self.group[0].sprites():
@@ -90,18 +96,20 @@ class Enemy(pygame.sprite.Sprite):
 
         #horizontal movement
         self.pos.x += self.direction.x * self.speed * dt
-        self.attackbox.centerx = round(self.pos.x)
+        # self.attackbox.centerx = round(self.pos.x)
         self.enemybox.centerx = round(self.pos.x)
-        self.rect.centerx = self.attackbox.centerx
+        # self.rect.centerx = self.attackbox.centerx
+        self.rect.centerx = self.enemybox.centerx
         self.collision('horizontal')
     
         
         #vertical movement
 
         self.pos.y += self.direction.y * self.speed * dt
-        self.attackbox.centery = round(self.pos.y)
+        # self.attackbox.centery = round(self.pos.y)
         self.enemybox.centery = round(self.pos.y)
-        self.rect.centery = self.attackbox.centery
+        # self.rect.centery = self.attackbox.centery
+        self.rect.centery = self.enemybox.centery
         self.collision('vertical')
 
 

@@ -8,13 +8,13 @@ import random
 from enemy import *
 from timers import Timer
 
+
 class Level:
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
         self.all_sprites = CameraGroup()
         self.collision_sprites = pygame.sprite.Group()
         self.enemy_sprites = pygame.sprite.Group()
-
         self.setup()
         self.overlay = Overlay(self.player)
 
@@ -36,7 +36,7 @@ class Level:
             groups = self.all_sprites,
             z = LAYERS['ground']
         )
-       
+
         self.enemy = Spawn(self.player,[self.all_sprites,self.collision_sprites,self.enemy_sprites])
         # self.enemy = Enemy((SPAWN_LOCATION['top'],SPAWN_LOCATION['top']),self.player,[self.all_sprites,self.collision_sprites,self.enemy_sprites])
 
@@ -66,10 +66,13 @@ class CameraGroup(pygame.sprite.Group):
                     
                    
                     if sprite == player:
-                        pygame.draw.circle(self.custom_surface,'yellow',offset_rect.center,5)
+
+                        # pygame.draw.circle(self.custom_surface,'yellow',offset_rect.center,5)
+                        
                         attackbox_rect = player.attackbox.copy()
                         attackbox_rect.center = offset_rect.center
                         pygame.draw.rect(self.custom_surface,COLORS['blue'],attackbox_rect,5)
+
                         hitbox_rect = player.hitbox.copy()
                         hitbox_rect.center = offset_rect.center
                         pygame.draw.rect(self.custom_surface,COLORS['green'],hitbox_rect,5)
@@ -78,11 +81,13 @@ class CameraGroup(pygame.sprite.Group):
                         enemy_rect.center = offset_rect.center
                         pygame.draw.rect(self.custom_surface,'orange',enemy_rect,5)
 
+
                         target_hoot_pos = offset_rect.center + PLAYER_HOOT_OFFSET[player.status.split('_')[0]]
                         pygame.draw.circle(self.custom_surface,'blue',target_hoot_pos,5)
                         
                         target_wing_pos = offset_rect.center + PLAYER_WING_OFFSET[player.status.split('_')[0]]
                         pygame.draw.circle(self.custom_surface,'purple',target_wing_pos,5)
+
 
 
 

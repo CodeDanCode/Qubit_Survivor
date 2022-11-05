@@ -4,7 +4,6 @@ from support import *
 from timers import Timer
 from controls import *
 
-
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, group,collision_sprites,enemy_sprites):
         super().__init__(group)
@@ -26,12 +25,13 @@ class Player(pygame.sprite.Sprite):
         self.speed = self.stats['speed']
         self.level = self.stats['level']
 
-
-
+        self.target_rect = None
 
         self.hitbox = self.rect.copy()
         self.attackbox = self.rect.copy().inflate(self.rect.width * 20, self.rect.width * 20)
-        self.enemybox = self.rect.copy().inflate(self.rect.width * 2, self.rect.height *2)
+        # self.enemybox = self.rect.copy().inflate(self.rect.width * 2, self.rect.height *2)
+        self.enemybox = self.rect.copy()
+
 
         self.collision_sprites = collision_sprites
         self.enemy_sprites = enemy_sprites
@@ -73,6 +73,7 @@ class Player(pygame.sprite.Sprite):
         if self.selected_weapon == 'hoot':
             for enemy in self.enemy_sprites.sprites():
                 if enemy.rect.collidepoint(self.target_pos):
+                #  if enemy.rect.colliderect(self.target_rect):
                     print(self.attack + weapon_data[self.selected_weapon]['damage'])
                     enemy.damage()
 
@@ -85,6 +86,7 @@ class Player(pygame.sprite.Sprite):
     def get_target_pos(self):
         if self.selected_weapon == 'hoot':
             self.target_pos = self.rect.center + PLAYER_HOOT_OFFSET[self.status.split('_')[0]]
+
         if self.selected_weapon == 'wing':
             self.target_pos = self.rect.center + PLAYER_WING_OFFSET[self.status.split('_')[0]]
 
@@ -156,8 +158,11 @@ class Player(pygame.sprite.Sprite):
                             self.hitbox.top = sprite.hitbox.bottom
                         self.rect.centery = self.hitbox.centery
                         self.pos.y = self.hitbox.centery
-
- 
+            if hasattr(sprite,'enemybox'):
+                if sprite.enemybox.colliderect(self.attackbox):
+                    sprite.speed_status = True
+                else:
+                    sprite.speed_status = False
 
     def move(self,dt):
     
