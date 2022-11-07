@@ -17,6 +17,9 @@ class Level:
         self.enemy_sprites = pygame.sprite.Group()
         self.setup()
         self.overlay = Overlay(self.player)
+        self.timers = {
+            'spawn' : Timer(5000,self.enemy.randomSpawn)
+        }
 
     def setup(self):
         tmx_data = load_pygame(PATHS['data path'])
@@ -40,11 +43,61 @@ class Level:
         self.enemy = Spawn(self.player,[self.all_sprites,self.collision_sprites,self.enemy_sprites])
         # self.enemy = Enemy((SPAWN_LOCATION['top'],SPAWN_LOCATION['top']),self.player,[self.all_sprites,self.collision_sprites,self.enemy_sprites])
 
+    def update_timers(self):
+        if not self.timers['spawn'].active:
+            self.timers['spawn'].activate()
+
+        for timer in self.timers.values():
+            timer.update()
+
     def run(self, dt,selected):
+
         self.display_surface.fill(COLORS['blue'])
-        self.all_sprites.custom_draw(self.player,self.enemy)
-        self.all_sprites.update(dt,selected)
-        self.overlay.display()
+        if not self.player.game_over:
+            self.all_sprites.custom_draw(self.player,self.enemy)
+    
+            self.all_sprites.update(dt,selected)
+            self.overlay.display()
+        else:
+            self.display_surface.fill(COLORS['white'])
+            self.game_over()
+
+    def game_over(self):
+
+        message_to_screen(
+            self.display_surface,
+            'Game Over', 
+            COLORS['black'],
+            TEXT_POS['title'],
+            FONT_SIZE['medium']
+            )
+
+        self.button(
+            'Play Again',
+            TEXT_POS['button_2'],
+            COLORS['blue'],
+            COLORS['red'],
+            'restart'
+            )
+
+
+    def button(self,text,pos,inactive_color,active_color,action = None):
+        cur = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+        
+        if pos[0] + BUTTON_SIZE[0] > cur[0] > pos[0] and pos[1] + BUTTON_SIZE[1] > cur[1] > pos[1]:
+             
+            pygame.draw.rect(self.display_surface, active_color,(pos[0],pos[1],BUTTON_SIZE[0],BUTTON_SIZE[1]))
+             
+            if click [0] == 1 and action != None:
+                if action == "restart":
+                    pass
+                    
+        else:
+            pygame.draw.rect(self.display_surface, inactive_color,(pos[0],pos[1],BUTTON_SIZE[0],BUTTON_SIZE[1]))
+
+        text_to_button(self.display_surface,text,COLORS['black'],pos)
+
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
@@ -107,12 +160,12 @@ class Spawn:
     def __init__(self,player,group):
         self.player = player
         self.group = group
-        self.setup()
+        self.randomSpawn()
 
 
-    def setup(self):
+    def randomSpawn(self):
         side = ['top','bottom','left','right']
-        
+
         for i in range(random.randrange(4,15)):            
             choice1 = random.choice(side)
             choice2 = random.choice(side)

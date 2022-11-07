@@ -8,7 +8,8 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos, group,collision_sprites,enemy_sprites):
         super().__init__(group)
         self.import_assets()
-        self.controls = Controls(self)
+        self.controls = Controls(self,group)
+        self.game_over = False
 
         self.status = 'right_idle'
         self.frame_index = 0 
@@ -80,7 +81,6 @@ class Player(pygame.sprite.Sprite):
         if self.selected_weapon == 'wing':
             for enemy in self.enemy_sprites.sprites():
                 if enemy.rect.collidepoint(self.target_pos):
-                    if enemy.rect.collidepoint(self.target_pos):
                         enemy.damage()
 
     def get_target_pos(self):
@@ -96,7 +96,7 @@ class Player(pygame.sprite.Sprite):
         if selected == 'normal':
             pass
         if selected == 'hard':
-            pass
+            self.controls.hard_controls()
 
     # def input(self):
     #     keys = pygame.key.get_pressed()

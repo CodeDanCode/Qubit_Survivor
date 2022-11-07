@@ -105,3 +105,11 @@ weapon_data = {
     'hoot' : {'cooldown': 100, 'damage': 15, 'graphic': '../resources/assets/hoot.png'},
     'wing' : {'cooldown': 400, 'damage' : 30, 'graphic': '../resources/assets/wing.png'}
 }
+
+
+ENEMY_DATA= {
+    'zombie' : {'health':25,'speed':75,'damage':25},
+    'zombie boss': {'health': 100, 'speed':50, 'damage': 50},
+    'robot' : {'health':30, 'speed': 85, 'damage': 35},
+    'robot boss' : {'health': 120, 'speed': 60, 'damage':60}
+}

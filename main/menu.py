@@ -12,12 +12,16 @@ class Menu:
     def intro(self):
         self.display_surface.fill(pygame.Color('White'))
 
-        self.message_to_screen(
+
+        message_to_screen(
+                self.display_surface,
                 'Controls', 
                 COLORS['black'],
                 TEXT_POS['title'],
                 FONT_SIZE['medium']
                 )
+
+
         # easy button
         self.button(
             'eazy',
@@ -43,20 +47,23 @@ class Menu:
             'hard'
             )
 
-    def text_objects(self,text, color,size):
-        font = pygame.font.SysFont(FONT, size)
-        textSurface = font.render(text,True,color)
-        return textSurface, textSurface.get_rect()
 
-    def message_to_screen(self,msg,color, pos, size = FONT_SIZE['small']):
-        textSurf, textRect = self.text_objects(msg,color,size)    
-        textRect.center = pos  
-        self.display_surface.blit(textSurf, textRect)
 
-    def text_to_button(self,msg,color,pos,size = FONT_SIZE['small']):    
-        textSurf,textRect = self.text_objects(msg,color,size)
-        textRect.center = (pos[0]+(BUTTON_SIZE[0]/2), pos[1]+(BUTTON_SIZE[1]/2))   
-        self.display_surface.blit(textSurf, textRect)
+
+    # def text_objects(self,text, color,size):
+    #     font = pygame.font.SysFont(FONT, size)
+    #     textSurface = font.render(text,True,color)
+    #     return textSurface, textSurface.get_rect()
+
+    # def message_to_screen(self,msg,color, pos, size = FONT_SIZE['small']):
+    #     textSurf, textRect = self.text_objects(msg,color,size)    
+    #     textRect.center = pos  
+    #     self.display_surface.blit(textSurf, textRect)
+
+    # def text_to_button(self,msg,color,pos,size = FONT_SIZE['small']):    
+    #     textSurf,textRect = text_objects(msg,color,size)
+    #     textRect.center = (pos[0]+(BUTTON_SIZE[0]/2), pos[1]+(BUTTON_SIZE[1]/2))   
+    #     self.display_surface.blit(textSurf, textRect)
 
     def button(self,text,pos, inactive_color, active_color, action = None):
          cur = pygame.mouse.get_pos()
@@ -77,10 +84,14 @@ class Menu:
          else:
              pygame.draw.rect(self.display_surface, inactive_color,(pos[0],pos[1],BUTTON_SIZE[0],BUTTON_SIZE[1]))
 
-         self.text_to_button(text,COLORS['black'],pos)
+         text_to_button(self.display_surface,text,COLORS['black'],pos)
          
     def run(self,dt):
+
         if self.selected != None:
             self.level.run(dt,self.selected)
         else:
             self.intro()
+
+        
+        

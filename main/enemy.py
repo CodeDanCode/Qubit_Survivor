@@ -1,6 +1,8 @@
 import pygame
 from settings import *
 from support import *
+from timers import Timer
+
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,pos,player,group,type):
@@ -22,14 +24,19 @@ class Enemy(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2()
         self.pos = pygame.math.Vector2(self.rect.center)
         self.speed_status = False
-        self.stats = {'health': 25,'speed': 75}
-        self.speed = self.stats['speed']
-        self.health = self.stats['health']
+        # self.stats = {'health': 25,'speed': 75, 'damage':25}
+
+        self.speed = ENEMY_DATA[self.enemy_type]['speed']
+        self.health = ENEMY_DATA[self.enemy_type]['health']
 
 
         # self.hitbox = self.rect.copy().inflate((-60,0))
         # self.attackbox = self.rect.copy()
         self.enemybox = self.rect.copy()
+
+        self.timers = {
+            'attack': Timer(1000,self.attack)
+        }
 
         self.collide = False        
 
@@ -51,15 +58,17 @@ class Enemy(pygame.sprite.Sprite):
             self.status = self.status.split('_')[0] + "_idle"
 
         if self.speed_status == True:
-            self.speed = self.stats['speed']* 0.5
+            self.speed = ENEMY_DATA[self.enemy_type]['speed'] * 0.5
         else:
-            self.speed = self.stats['speed']
+            self.speed = ENEMY_DATA[self.enemy_type]['speed']
         
     def collision(self,direction):
         for sprite in self.group[0].sprites():
             if sprite == self.player:
-                if sprite.enemybox.colliderect(self.enemybox):
-                    # self.direction = pygame.math.Vector2() 
+                if sprite.hitbox.colliderect(self.enemybox):
+                    self.direction = pygame.math.Vector2() 
+                    if not self.timers['attack'].active:
+                        self.timers['attack'].activate()                
                     if direction == 'horizontal':
                         if self.direction.x > 0:
                             self.enemybox.right = sprite.enemybox.left
@@ -76,6 +85,8 @@ class Enemy(pygame.sprite.Sprite):
                         self.rect.centery = self.enemybox.centery
                         self.pos.y = self.enemybox.centery
 
+                    
+
 
     def move(self,dt):
         
@@ -84,10 +95,11 @@ class Enemy(pygame.sprite.Sprite):
 
         enemy_vec = pygame.math.Vector2(self.rect.center)
         player_vec = pygame.math.Vector2(self.player.rect.center)
-        self.direction = (player_vec - enemy_vec).normalize()
+        # self.direction = (player_vec - enemy_vec).normalize()
+        self.direction = player_vec - enemy_vec
         
-        # if self.direction.magnitude() > 0:
-        #     self.direction = self.direction.normalize()
+        if self.direction.magnitude() > 0:
+            self.direction = self.direction.normalize()
 
         if self.rect.x > self.player.rect.x:
             self.status = LEFT
@@ -104,13 +116,20 @@ class Enemy(pygame.sprite.Sprite):
     
         
         #vertical movement
-
         self.pos.y += self.direction.y * self.speed * dt
         # self.attackbox.centery = round(self.pos.y)
         self.enemybox.centery = round(self.pos.y)
         # self.rect.centery = self.attackbox.centery
         self.rect.centery = self.enemybox.centery
         self.collision('vertical')
+ 
+
+    def attack(self):
+        self.player.health -= ENEMY_DATA[self.enemy_type]['damage']
+
+        if self.player.health <= 0:
+            self.player.kill()
+            self.player.game_over = True
 
 
     def damage(self):
@@ -119,8 +138,13 @@ class Enemy(pygame.sprite.Sprite):
         if self.health <= 0:
             self.kill()
 
+    def update_timers(self):
+        for timer in self.timers.values():
+            timer.update()
+
     def update(self,dt,selected):
         self.get_status()
+        self.update_timers()
         self.move(dt)
         self.animate(dt)
 
