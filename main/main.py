@@ -1,8 +1,9 @@
-import pygame, sys
+import pygame, sys, os
 from level import *
 from settings import *
 from menu import *
 from qiskit import IBMQ
+from dotenv import load_dotenv
 
 class Main:
     def __init__(self):
@@ -15,15 +16,13 @@ class Main:
 
     def connect(self):
         #
+        load_dotenv()
+        TOKEN = os.getenv('TOKEN')
         IBMQ.save_account(TOKEN)
 
         IBMQ.load_account() # opens account to get access to backends
         provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
         backend = provider.get_backend('ibmq_manila') # random backend
-
-        # pretends to create the circuit 
-        qoutput = "Creating circuit..."
-        # print(qoutput)
 
     def run(self):
         while True:
