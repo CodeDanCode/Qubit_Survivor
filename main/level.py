@@ -120,8 +120,7 @@ class CameraGroup(pygame.sprite.Group):
                    
                     if sprite == player:
 
-                        # pygame.draw.circle(self.custom_surface,'yellow',offset_rect.center,5)
-                        
+                       
                         attackbox_rect = player.attackbox.copy()
                         attackbox_rect.center = offset_rect.center
                         pygame.draw.rect(self.custom_surface,COLORS['blue'],attackbox_rect,5)
@@ -169,7 +168,6 @@ class Spawn:
         for i in range(random.randrange(4,15)):            
             choice1 = random.choice(side)
             choice2 = random.choice(side)
-            # print(SPAWN_LOCATION[choice1],SPAWN_LOCATION[choice2])
             self.enemy = Enemy((SPAWN_LOCATION[choice1],SPAWN_LOCATION[choice2]),self.player,self.group,ENEMY_1)
         return self.enemy
          

@@ -10,12 +10,10 @@ class Main:
         pygame.init()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
-        # self.level = Level()
         self.connect()
         self.menu = Menu()
 
     def connect(self):
-        #
         load_dotenv()
         TOKEN = os.getenv('TOKEN')
         IBMQ.save_account(TOKEN)
@@ -36,7 +34,6 @@ class Main:
                         sys.exit()
 
             dt = self.clock.tick() /1000
-            # self.level.run(dt)
             self.menu.run(dt)
             pygame.display.update()
 
