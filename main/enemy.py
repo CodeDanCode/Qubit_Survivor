@@ -4,6 +4,7 @@ from support import *
 from timers import Timer
 
 
+
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,pos,player,group,type):
         super().__init__(group)
@@ -125,7 +126,7 @@ class Enemy(pygame.sprite.Sprite):
  
 
     def attack(self):
-        # self.player.health -= ENEMY_DATA[self.enemy_type]['damage']
+        self.player.health -= ENEMY_DATA[self.enemy_type]['damage']
 
         if self.player.health <= 0:
             self.player.kill()
@@ -137,6 +138,7 @@ class Enemy(pygame.sprite.Sprite):
 
         if self.health <= 0:
             self.kill()
+            
 
     def update_timers(self):
         for timer in self.timers.values():

@@ -49,22 +49,6 @@ class Menu:
 
 
 
-
-    # def text_objects(self,text, color,size):
-    #     font = pygame.font.SysFont(FONT, size)
-    #     textSurface = font.render(text,True,color)
-    #     return textSurface, textSurface.get_rect()
-
-    # def message_to_screen(self,msg,color, pos, size = FONT_SIZE['small']):
-    #     textSurf, textRect = self.text_objects(msg,color,size)    
-    #     textRect.center = pos  
-    #     self.display_surface.blit(textSurf, textRect)
-
-    # def text_to_button(self,msg,color,pos,size = FONT_SIZE['small']):    
-    #     textSurf,textRect = text_objects(msg,color,size)
-    #     textRect.center = (pos[0]+(BUTTON_SIZE[0]/2), pos[1]+(BUTTON_SIZE[1]/2))   
-    #     self.display_surface.blit(textSurf, textRect)
-
     def button(self,text,pos, inactive_color, active_color, action = None):
          cur = pygame.mouse.get_pos()
          click = pygame.mouse.get_pressed()

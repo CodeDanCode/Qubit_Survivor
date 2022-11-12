@@ -7,6 +7,7 @@ from pytmx.util_pygame import load_pygame
 import random
 from enemy import *
 from timers import Timer
+import threading
 
 
 class Level:
@@ -15,11 +16,11 @@ class Level:
         self.all_sprites = CameraGroup()
         self.collision_sprites = pygame.sprite.Group()
         self.enemy_sprites = pygame.sprite.Group()
+        self.enemy_index = 0
         self.setup()
         self.overlay = Overlay(self.player)
-        self.timers = {
-            'spawn' : Timer(5000,self.enemy.randomSpawn)
-        }
+        
+        
 
     def setup(self):
         tmx_data = load_pygame(PATHS['data path'])
@@ -40,27 +41,23 @@ class Level:
             z = LAYERS['ground']
         )
 
-        self.enemy = Spawn(self.player,[self.all_sprites,self.collision_sprites,self.enemy_sprites])
-        # self.enemy = Enemy((SPAWN_LOCATION['top'],SPAWN_LOCATION['top']),self.player,[self.all_sprites,self.collision_sprites,self.enemy_sprites])
+        self.enemy = Spawn(self.player,[self.all_sprites,self.collision_sprites,self.enemy_sprites],self.enemy_index)
 
-    def update_timers(self):
-        if not self.timers['spawn'].active:
-            self.timers['spawn'].activate()
-
-        for timer in self.timers.values():
-            timer.update()
 
     def run(self, dt,selected):
 
         self.display_surface.fill(COLORS['blue'])
         if not self.player.game_over:
-            self.all_sprites.custom_draw(self.player,self.enemy)
-    
+            
+            self.all_sprites.custom_draw(self.player,self.enemy)  
             self.all_sprites.update(dt,selected)
             self.overlay.display()
+            
         else:
             self.display_surface.fill(COLORS['white'])
             self.game_over()
+
+
 
     def game_over(self):
 
@@ -72,31 +69,15 @@ class Level:
             FONT_SIZE['medium']
             )
 
-        self.button(
-            'Play Again',
-            TEXT_POS['button_2'],
-            COLORS['blue'],
-            COLORS['red'],
-            'restart'
-            )
+        message_to_screen(
+            self.display_surface,
+            "To restart game refresh page.",
+            COLORS['black'],
+            TEXT_POS['refresh'],
+            FONT_SIZE['small']
+        )
 
 
-    def button(self,text,pos,inactive_color,active_color,action = None):
-        cur = pygame.mouse.get_pos()
-        click = pygame.mouse.get_pressed()
-        
-        if pos[0] + BUTTON_SIZE[0] > cur[0] > pos[0] and pos[1] + BUTTON_SIZE[1] > cur[1] > pos[1]:
-             
-            pygame.draw.rect(self.display_surface, active_color,(pos[0],pos[1],BUTTON_SIZE[0],BUTTON_SIZE[1]))
-             
-            if click [0] == 1 and action != None:
-                if action == "restart":
-                    pass
-                    
-        else:
-            pygame.draw.rect(self.display_surface, inactive_color,(pos[0],pos[1],BUTTON_SIZE[0],BUTTON_SIZE[1]))
-
-        text_to_button(self.display_surface,text,COLORS['black'],pos)
 
 
 class CameraGroup(pygame.sprite.Group):
@@ -119,8 +100,7 @@ class CameraGroup(pygame.sprite.Group):
                     
                    
                     if sprite == player:
-
-                       
+ 
                         attackbox_rect = player.attackbox.copy()
                         attackbox_rect.center = offset_rect.center
                         pygame.draw.rect(self.custom_surface,COLORS['blue'],attackbox_rect,5)
@@ -155,19 +135,33 @@ class CameraGroup(pygame.sprite.Group):
                     self.custom_surface.blit(sprite.image,offset_rect)
                     self.display_surface.blit(self.custom_surface,(240,5))
 
-class Spawn:
-    def __init__(self,player,group):
+class Spawn(pygame.sprite.Group):
+    def __init__(self,player,group,enemy_index):
+        super().__init__()
         self.player = player
         self.group = group
+        self.enemy_index = enemy_index
+        # self.timers = {
+        #     'spawn' : Timer(100,self.randomSpawn)
+        # }
         self.randomSpawn()
-
 
     def randomSpawn(self):
         side = ['top','bottom','left','right']
+        enemies = [ENEMY_1,ENEMY_2,ENEMY_BOSS_1,ENEMY_BOSS_2]
+        self.stage_enemies = []
 
-        for i in range(random.randrange(4,15)):            
+        for i in range(random.randrange(4,15)):         
             choice1 = random.choice(side)
             choice2 = random.choice(side)
-            self.enemy = Enemy((SPAWN_LOCATION[choice1],SPAWN_LOCATION[choice2]),self.player,self.group,ENEMY_1)
-        return self.enemy
-         
+            self.enemy = Enemy((SPAWN_LOCATION[choice1],SPAWN_LOCATION[choice2]),self.player,self.group,enemies[self.enemy_index])
+        
+    # def update_timers(self):
+    #     if not self.timers['spawn'].active:
+    #         self.timers['spawn'].activate()
+
+    #     for timer in self.timers.values():
+    #         timer.update()
+
+
+ 

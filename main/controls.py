@@ -93,6 +93,7 @@ class Controls:
 
                     elif self.count >=2 and self.fighting:
                         self.qstate = self.model.collapse(self.model.qwlf)
+                        print("fighting: ", self.qstate)
                         self.set_fighting()
                         self.count = 0
 
@@ -122,26 +123,23 @@ class Controls:
             self.player.status = LEFT
 
         self.model.update()
-
+       
 
     def set_fighting(self):
         if not self.player.timers['weapon switch'].active:
-            print("fighting: ", self.qstate)
+            
             if self.qstate == '00' or self.qstate == '01':
-                self.player.timers['weapon switch'].activate()
-                self.player.weapon_index +=1
-                self.player.weapon_index = self.player.weapon_index if self.player.weapon_index < len(self.player.weapons) else 0
+                self.player.weapon_index = 0
                 self.player.selected_weapon = self.player.weapons[self.player.weapon_index]
 
 
             elif self.qstate == '10' or self.qstate == '11':
-                self.player.timers['weapon switch'].activate()
-                self.player.weapon_index +=1
-                self.player.weapon_index = self.player.weapon_index if self.player.weapon_index < len(self.player.weapons) else 0
+                self.player.weapon_index = 1
                 self.player.selected_weapon = self.player.weapons[self.player.weapon_index]
 
-    
         self.player.timers['weapon use'].activate()
         self.player.direction = pygame.math.Vector2()
         self.player.frame_index = 0
+        self.model.update()
         self.fighting = False
+      

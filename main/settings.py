@@ -23,7 +23,8 @@ TEXT_POS = {
     'title': (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 2) - 150),
     'button_1': (225,450),
     'button_2': (525,450),
-    'button_3': (825,450)
+    'button_3': (825,450),
+    'refresh': (int(SCREEN_WIDTH/2),int(SCREEN_HEIGHT/2))
 }
 
 

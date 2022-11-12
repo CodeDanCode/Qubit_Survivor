@@ -30,6 +30,7 @@ class Player(pygame.sprite.Sprite):
 
         self.hitbox = self.rect.copy()
         self.attackbox = self.rect.copy().inflate(self.rect.width * 20, self.rect.width * 20)
+
         # self.enemybox = self.rect.copy().inflate(self.rect.width * 2, self.rect.height *2)
         self.enemybox = self.rect.copy()
 
@@ -39,7 +40,8 @@ class Player(pygame.sprite.Sprite):
 
         self.timers = {
                 'weapon use': Timer(350, self.use_weapon),
-                'weapon switch': Timer(200)
+                'weapon switch': Timer(200),
+                'weapon cooldown' : Timer(15000)
             }
         
         self.weapons = ['hoot','wing'] # add wing when ready
@@ -74,13 +76,15 @@ class Player(pygame.sprite.Sprite):
         if self.selected_weapon == 'hoot':
             for enemy in self.enemy_sprites.sprites():
                 if enemy.rect.collidepoint(self.target_pos):
-                    print(self.attack + weapon_data[self.selected_weapon]['damage'])
+                    # print(self.attack + weapon_data[self.selected_weapon]['damage'])
                     enemy.damage()
 
-        if self.selected_weapon == 'wing':
+        if self.selected_weapon == 'wing' and not self.timers['weapon cooldown'].active:
             for enemy in self.enemy_sprites.sprites():
-                if enemy.rect.collidepoint(self.target_pos):
+                if enemy.rect.colliderect(self.attackbox):
                         enemy.damage()
+                        self.timers['weapon cooldown'].activate()
+                        
 
     def get_target_pos(self):
         if self.selected_weapon == 'hoot':
