@@ -29,6 +29,8 @@ class Enemy(pygame.sprite.Sprite):
 
         self.speed = ENEMY_DATA[self.enemy_type]['speed']
         self.health = ENEMY_DATA[self.enemy_type]['health']
+        self.exp = ENEMY_DATA[self.enemy_type]['exp']
+        self.enemy_damage = ENEMY_DATA[self.enemy_type]['damage']
 
 
         # self.hitbox = self.rect.copy().inflate((-60,0))
@@ -62,6 +64,16 @@ class Enemy(pygame.sprite.Sprite):
             self.speed = ENEMY_DATA[self.enemy_type]['speed'] * 0.5
         else:
             self.speed = ENEMY_DATA[self.enemy_type]['speed']
+
+        if self.player.exp >= 1000 * self.player.level:
+            self.levelup()
+
+    
+    def levelup(self):
+        self.health += 10
+        self.enemy_damage += 5
+
+
         
     def collision(self,direction):
         for sprite in self.group[0].sprites():
@@ -126,7 +138,9 @@ class Enemy(pygame.sprite.Sprite):
  
 
     def attack(self):
-        self.player.health -= ENEMY_DATA[self.enemy_type]['damage']
+        # self.player.health -= ENEMY_DATA[self.enemy_type]['damage']
+        
+        # self.player.health -= self.enemy_damage
 
         if self.player.health <= 0:
             self.player.kill()
@@ -138,6 +152,9 @@ class Enemy(pygame.sprite.Sprite):
 
         if self.health <= 0:
             self.kill()
+            # self.player.exp += ENEMY_DATA[self.enemy_type]['exp']
+            self.player.exp += self.exp
+            print(self.player.exp)
             
 
     def update_timers(self):

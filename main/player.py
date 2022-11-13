@@ -3,6 +3,8 @@ from settings import *
 from support import *
 from timers import Timer
 from controls import *
+from enemy import Enemy
+import random
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, group,collision_sprites,enemy_sprites):
@@ -10,7 +12,8 @@ class Player(pygame.sprite.Sprite):
         self.import_assets()
         self.controls = Controls(self,group)
         self.game_over = False
-
+        self.group = [group,collision_sprites,enemy_sprites]
+        self.enemy_index = 0
         self.status = 'right_idle'
         self.frame_index = 0 
         self.temp_player(pos)
@@ -20,12 +23,13 @@ class Player(pygame.sprite.Sprite):
         self.pos = pygame.math.Vector2(self.rect.center)
 
         self.stats = {'health':100 , 'attack': 10,'speed': 200, 'level': 1, 'exp':100}
+        self.maxstats = {'health':200,'attack':20, 'speed': 300, 'exp':10000}
         self.health = self.stats['health'] 
         self.attack = self.stats['attack']
         self.exp = self.stats['exp']
         self.speed = self.stats['speed']
         self.level = self.stats['level']
-
+        
         self.target_rect = None
 
         self.hitbox = self.rect.copy()
@@ -84,7 +88,8 @@ class Player(pygame.sprite.Sprite):
                 if enemy.rect.colliderect(self.attackbox):
                         enemy.damage()
                         self.timers['weapon cooldown'].activate()
-                        
+
+
 
     def get_target_pos(self):
         if self.selected_weapon == 'hoot':
@@ -109,6 +114,23 @@ class Player(pygame.sprite.Sprite):
         if self.timers['weapon use'].active:
             self.status = self.status.split('_')[0] + '_' + self.selected_weapon
   
+
+        if self.exp >= 1000 * self.level:
+            self.levelup()
+
+    
+    def levelup(self):
+        self.level += 1
+        self.health += 10
+        self.attack += 1
+        self.speed += 10
+        
+        if (self.level % 2) != 0 and self.enemy_index <=3:
+            self.enemy_index += 1
+
+        elif self.enemy_index == 3:
+            self.enemy_index = 0
+
 
     def collision(self,direction):
         for sprite in self.collision_sprites.sprites():

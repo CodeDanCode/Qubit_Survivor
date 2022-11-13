@@ -49,8 +49,6 @@ class Controls:
 
 
     def hard_controls(self):
-
-        # keys = pygame.key.get_pressed()
         
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -105,20 +103,41 @@ class Controls:
 
 
     def set_direction(self):
-        
+        # north
         if self.qstate == '000':
             self.player.direction.y = -1
             self.player.status = UP
-
-        if self.qstate == '010':
+        # north east
+        if self.qstate == '001':
+            self.player.direction.y = -1
             self.player.direction.x = 1
             self.player.status = RIGHT
 
+        # east
+        if self.qstate == '010':
+            self.player.direction.x = 1
+            self.player.status = RIGHT
+        # south east
+        if self.qstate == '011':
+            self.player.direction.y = 1
+            self.player.direction.x = 1
+            self.player.status = RIGHT
+        # south
         if self.qstate == '100':
             self.player.direction.y = 1
             self.player.status = DOWN
-
+        # south west
+        if self.qstate == '101':
+            self.player.direction.y = 1
+            self.player.direction.x = -1
+            self.player.status = LEFT 
+        # west
         if self.qstate == '110':
+            self.player.direction.x = -1
+            self.player.status = LEFT
+        # north west
+        if self.qstate == '111':
+            self.player.direction.y = -1
             self.player.direction.x = -1
             self.player.status = LEFT
 
@@ -128,12 +147,12 @@ class Controls:
     def set_fighting(self):
         if not self.player.timers['weapon switch'].active:
             
-            if self.qstate == '00' or self.qstate == '01':
+            if self.qstate == '00' or self.qstate == '11':
                 self.player.weapon_index = 0
                 self.player.selected_weapon = self.player.weapons[self.player.weapon_index]
 
 
-            elif self.qstate == '10' or self.qstate == '11':
+            elif self.qstate == '10' or self.qstate == '01':
                 self.player.weapon_index = 1
                 self.player.selected_weapon = self.player.weapons[self.player.weapon_index]
 

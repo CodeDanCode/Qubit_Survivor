@@ -45,12 +45,14 @@ RIGHT = 'right'
 # enemies
 ENEMY_1 = 'zombie'
 ENEMY_2 = 'robot'
-ENEMY_BOSS_1 = 'boss_zombie'
-ENEMY_BOSS_2 = 'boss_robot'
+ENEMY_BOSS_1 = 'zombie boss'
+ENEMY_BOSS_2 = 'robot boss'
 
 OVERLAYS ={
     'health bar' : "healthbar",
-    'sketch':'sketch_board'
+    'sketch':'sketch_board',
+    'test': 'test',
+    'control_bar':'control_bar'
 }
 
 PATHS = {
@@ -63,7 +65,8 @@ PATHS = {
 OVERLAY_POSITIONS = {
     'health bar' :(SCREEN_WIDTH - 125,25),
     'progress bar' :(70, SCREEN_HEIGHT -5),
-    'sketch' : (10,5)
+    'sketch' : (10,5),
+    'control': (10,410)
 }
 
 COLORS = {
@@ -109,8 +112,8 @@ weapon_data = {
 
 
 ENEMY_DATA= {
-    'zombie' : {'health':25,'speed':75,'damage':25},
-    'zombie boss': {'health': 100, 'speed':50, 'damage': 50},
-    'robot' : {'health':30, 'speed': 85, 'damage': 35},
-    'robot boss' : {'health': 120, 'speed': 60, 'damage':60}
+    'zombie' : {'health':25,'speed':75,'damage':25,'exp':100},
+    'zombie boss': {'health': 100, 'speed':50, 'damage': 50,'exp':200},
+    'robot' : {'health':30, 'speed': 85, 'damage': 35,'exp':140},
+    'robot boss' : {'health': 120, 'speed': 60, 'damage':60,'exp':240}
 }
