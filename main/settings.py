@@ -117,3 +117,19 @@ ENEMY_DATA= {
     'robot' : {'health':30, 'speed': 85, 'damage': 35,'exp':140},
     'robot boss' : {'health': 120, 'speed': 60, 'damage':60,'exp':240}
 }
+
+qstate_data = {
+    'graphic': '../resources/qstates/H.png',
+    'graphic': '../resources/qstates/I.png',
+    'graphic': '../resources/qstates/S.png',
+    'graphic': '../resources/qstates/S.png',
+    'graphic': '../resources/qstates/X/png',
+    'graphic': '../resources/qstates/Y.png',
+    'graphic': '../resources/qstates/Z.png'
+}
+
+CONTROL_BOX = {
+    '0': (), #add placement for images on control line
+    '1': (),
+    '2': (),
+}

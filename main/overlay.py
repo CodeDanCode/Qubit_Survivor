@@ -19,6 +19,14 @@ class Overlay:
             weapon = pygame.image.load(weapon['graphic']).convert_alpha()
             self.weapon_graphics.append(weapon)
 
+
+        self.qstate_graphics = []
+        for qstate in qstate_data.values():
+            qstate = pygame.image.load(qstate['graphic']).convert_alpha()
+            self.qstate_graphics.append(qstate)
+
+
+
         # this is for side panels on overlay
         self.sketch_surf = pygame.image.load(f"{overlay_path}{OVERLAYS['test']}.png").convert_alpha()
         self.control_surf = pygame.image.load(f"{overlay_path}{OVERLAYS['control_bar']}.png").convert_alpha()
@@ -60,11 +68,23 @@ class Overlay:
         self.display_surface.blit(weapon_surf,weapon_rect)
 
 
+
+    def show_controls(self,qstate_index,count):
+        if count == 0:
+            qstate_surf = self.qstate_graphics[qstate_index]
+            qstate_rect = qstate_surf.get_rect(center = CONTROL_BOX[qstate_index])
+            self.display_surface.blit(qstate_surf,qstate_rect)
+
+
+
+
+
     def display(self):
         # pygame.draw.rect(self.display_surface,'black',self.health_bar_rect)
         self.show_bar(self.player.health,self.player.stats['health'],self.health_bar_rect,'red')
         self.show_exp(self.player.level)
         self.weapon_overlay(self.player.weapon_index,self.player.timers['weapon cooldown'].active)
+        self.show_controls(self.player.controls.model.qin,self.player.controls.count)
 
         # self.health_surf = pygame.transform.scale(self.health_surf,(232,45))
         # self.health_rect = self.health_surf.get_rect(midtop=OVERLAY_POSITIONS['health bar'])

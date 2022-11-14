@@ -10,7 +10,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos, group,collision_sprites,enemy_sprites):
         super().__init__(group)
         self.import_assets()
-        self.controls = Controls(self,group)
+        self.controls = Controls(self)
         self.game_over = False
         self.group = [group,collision_sprites,enemy_sprites]
         self.enemy_index = 0

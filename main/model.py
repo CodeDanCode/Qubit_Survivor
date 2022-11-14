@@ -42,26 +42,27 @@ class CircuitGridModel:
             qoutput = "Something went wrong. Input was "+isFight
             # print(qoutput)
 
+        self.qin = qin
         # qin = qin.upper()
-        if qin == "H":
+        if self.qin == "H":
             qtype.h(qcircuit)
         # change output display
-        elif qin == "I":
+        elif self.qin == "I":
             qtype.i(qcircuit)
         # change output display
-        elif qin == "S":
+        elif self.qin == "S":
             qtype.s(qcircuit)
         # change output display
-        elif qin == "T":
+        elif self.qin == "T":
             qtype.t(qcircuit)
         # change output display
-        elif qin == "X":
+        elif self.qin == "X":
             qtype.x(qcircuit)
         # change output display
-        elif qin == "Y":
+        elif self.qin == "Y":
             qtype.ry(pi/2, qcircuit)
         # change output display
-        elif qin == "Z":
+        elif self.qin == "Z":
             qtype.rz(pi/2, qcircuit)
         # change output display
         else:

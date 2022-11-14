@@ -3,7 +3,7 @@ from settings import *
 from model import *
 
 class Controls:
-    def __init__(self,player,group):
+    def __init__(self,player):
         self.count = 0
         self.player =player
         self.model = CircuitGridModel()
