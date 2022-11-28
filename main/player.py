@@ -99,11 +99,12 @@ class Player(pygame.sprite.Sprite):
             self.target_pos = self.rect.center + PLAYER_WING_OFFSET[self.status.split('_')[0]]
 
     def control(self,selected):
-        if selected == 'easy':
+        self.selected = selected
+        if self.selected == 'easy':
             self.controls.easy_controls()
-        if selected == 'normal':
+        if self.selected == 'normal':
             pass
-        if selected == 'hard':
+        if self.selected == 'hard':
             self.controls.hard_controls()
 
     def get_status(self):

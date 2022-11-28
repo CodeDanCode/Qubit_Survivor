@@ -129,7 +129,7 @@ qstate_data = {
 }
 
 CONTROL_BOX = {
-    '0': (), #add placement for images on control line
-    '1': (),
-    '2': (),
+    '0': (222,555), #add placement for images on control line
+    '1': (222,555),
+    '2': (222,555),
 }

@@ -22,7 +22,7 @@ class Overlay:
 
         self.qstate_graphics = []
         for qstate in qstate_data.values():
-            qstate = pygame.image.load(qstate['graphic']).convert_alpha()
+            qstate = pygame.image.load(qstate_data['graphic']).convert_alpha()
             self.qstate_graphics.append(qstate)
 
 
@@ -84,7 +84,9 @@ class Overlay:
         self.show_bar(self.player.health,self.player.stats['health'],self.health_bar_rect,'red')
         self.show_exp(self.player.level)
         self.weapon_overlay(self.player.weapon_index,self.player.timers['weapon cooldown'].active)
-        self.show_controls(self.player.controls.model.qin,self.player.controls.count)
+        # set if statement for when hard or medium mode is selected
+        if self.player.selected != 'easy':
+            self.show_controls(self.player.controls.qin,self.player.controls.count)
 
         # self.health_surf = pygame.transform.scale(self.health_surf,(232,45))
         # self.health_rect = self.health_surf.get_rect(midtop=OVERLAY_POSITIONS['health bar'])
