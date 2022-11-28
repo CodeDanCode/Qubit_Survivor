@@ -10,6 +10,7 @@ class Controls:
         self.fighting = False
         self.stop = False
         self.qstate = None
+        self.qin = 0
         
     
     def easy_controls(self):
@@ -54,25 +55,32 @@ class Controls:
             if event.type == pygame.KEYDOWN:
                 if not self.player.timers['weapon use'].active:
                     if event.key == pygame.K_h:
-                        self.model.add_to_circuit('H',self.count, self.fighting)
+                        self.qin = 'H'
+                        self.model.add_to_circuit(self.qin,self.count, self.fighting)
                         self.count+=1
                     elif event.key == pygame.K_i:
-                        self.model.add_to_circuit('I',self.count, self.fighting)
+                        self.qin = 'I'
+                        self.model.add_to_circuit(self.qin,self.count, self.fighting)
                         self.count+=1    
                     elif event.key == pygame.K_s:
-                        self.model.add_to_circuit('S',self.count, self.fighting)
+                        self.qin = 'S'
+                        self.model.add_to_circuit(self.qin,self.count, self.fighting)
                         self.count+=1
                     elif event.key == pygame.K_t:
-                        self.model.add_to_circuit('T',self.count, self.fighting)
+                        self.qin = 'T'
+                        self.model.add_to_circuit(self.qin,self.count, self.fighting)
                         self.count+=1
                     elif event.key == pygame.K_x:
-                        self.model.add_to_circuit('X',self.count, self.fighting)
+                        self.qin = 'X'
+                        self.model.add_to_circuit(self.qin,self.count, self.fighting)
                         self.count+=1
                     elif event.key == pygame.K_y:
-                        self.model.add_to_circuit('Y',self.count, self.fighting)
+                        self.qin = 'Y'
+                        self.model.add_to_circuit(self.qin,self.count, self.fighting)
                         self.count+=1
                     elif event.key == pygame.K_z:
-                        self.model.add_to_circuit('Z',self.count, self.fighting)
+                        self.qin = 'Z'
+                        self.model.add_to_circuit(self.qin,self.count, self.fighting)
                         self.count+=1
 
                     # stop movement
