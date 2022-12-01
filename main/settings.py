@@ -112,10 +112,10 @@ weapon_data = {
 
 
 ENEMY_DATA= {
-    'zombie' : {'health':25,'speed':75,'damage':25,'exp':100},
-    'zombie boss': {'health': 100, 'speed':50, 'damage': 50,'exp':200},
-    'robot' : {'health':30, 'speed': 85, 'damage': 35,'exp':140},
-    'robot boss' : {'health': 120, 'speed': 60, 'damage':60,'exp':240}
+    'zombie' : {'health':25,'speed':75,'damage':25,'exp':100, 'attack_sound':'../resources/sounds/zombie_hit.mp3'},
+    'zombie boss': {'health': 100, 'speed':50, 'damage': 50,'exp':200, 'attack_sound':'../resources/sounds/zombie_hit.mp3'},
+    'robot' : {'health':30, 'speed': 85, 'damage': 35,'exp':140, 'attack_sound':'../resources/sounds/robot_hit.mp3'},
+    'robot boss' : {'health': 120, 'speed': 60, 'damage':60,'exp':240, 'attack_sound':'../resources/sounds/robot_hit.mp3'}
 }
 
 qstate_data = {

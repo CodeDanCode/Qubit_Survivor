@@ -69,11 +69,11 @@ class Overlay:
 
 
 
-    def show_controls(self,qstate_index,count):
-        if count == 0:
-            qstate_surf = self.qstate_graphics[qstate_index]
-            qstate_rect = qstate_surf.get_rect(center = CONTROL_BOX[qstate_index])
-            self.display_surface.blit(qstate_surf,qstate_rect)
+    # def show_controls(self,qstate_index,count):
+    #     if count == 0:
+    #         qstate_surf = self.qstate_graphics[qstate_index]
+    #         qstate_rect = qstate_surf.get_rect(center = CONTROL_BOX[qstate_index])
+    #         self.display_surface.blit(qstate_surf,qstate_rect)
 
 
 
@@ -85,8 +85,8 @@ class Overlay:
         self.show_exp(self.player.level)
         self.weapon_overlay(self.player.weapon_index,self.player.timers['weapon cooldown'].active)
         # set if statement for when hard or medium mode is selected
-        if self.player.selected != 'easy':
-            self.show_controls(self.player.controls.qin,self.player.controls.count)
+        # if self.player.selected != 'easy':
+        #     self.show_controls(self.player.controls.qin,self.player.controls.count)
 
         # self.health_surf = pygame.transform.scale(self.health_surf,(232,45))
         # self.health_rect = self.health_surf.get_rect(midtop=OVERLAY_POSITIONS['health bar'])

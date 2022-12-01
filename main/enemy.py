@@ -27,6 +27,7 @@ class Enemy(pygame.sprite.Sprite):
         self.speed_status = False
         # self.stats = {'health': 25,'speed': 75, 'damage':25}
 
+        self.enemy_info = ENEMY_DATA[self.enemy_type]
         self.speed = ENEMY_DATA[self.enemy_type]['speed']
         self.health = ENEMY_DATA[self.enemy_type]['health']
         self.exp = ENEMY_DATA[self.enemy_type]['exp']
@@ -41,7 +42,10 @@ class Enemy(pygame.sprite.Sprite):
             'attack': Timer(1000,self.attack)
         }
 
-        self.collide = False        
+        self.collide = False
+        self.death_sound = pygame.mixer.Sound('../resources/sounds/pop.mp3')       
+        self.death_sound.set_volume(0.2)
+
 
     def import_assets(self):
         self.animations = {'left_idle':[],'left':[],'right_idle':[],'right':[]}
@@ -81,7 +85,7 @@ class Enemy(pygame.sprite.Sprite):
                 if sprite.hitbox.colliderect(self.enemybox):
                     self.direction = pygame.math.Vector2() 
                     if not self.timers['attack'].active:
-                        self.timers['attack'].activate()                
+                        self.timers['attack'].activate()              
                     if direction == 'horizontal':
                         if self.direction.x > 0:
                             self.enemybox.right = sprite.enemybox.left
@@ -140,8 +144,8 @@ class Enemy(pygame.sprite.Sprite):
     def attack(self):
         # self.player.health -= ENEMY_DATA[self.enemy_type]['damage']
         
-        # self.player.health -= self.enemy_damage
-
+        self.player.health -= self.enemy_damage
+        
         if self.player.health <= 0:
             self.player.kill()
             self.player.game_over = True
@@ -152,9 +156,9 @@ class Enemy(pygame.sprite.Sprite):
 
         if self.health <= 0:
             self.kill()
-            # self.player.exp += ENEMY_DATA[self.enemy_type]['exp']
+            self.player.exp += ENEMY_DATA[self.enemy_type]['exp']
             self.player.exp += self.exp
-            print(self.player.exp)
+            self.death_sound.play()
             
 
     def update_timers(self):

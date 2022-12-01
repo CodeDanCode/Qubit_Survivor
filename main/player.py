@@ -52,6 +52,10 @@ class Player(pygame.sprite.Sprite):
         self.weapon_index = 0
         self.selected_weapon = self.weapons[self.weapon_index]
 
+        self.hoot_attack_sound = pygame.mixer.Sound('../resources/sounds/hoot_attack.mp3')
+        self.hoot_attack_sound.set_volume(0.4)
+        self.wing_attack_sound = pygame.mixer.Sound('../resources/sounds/wing_attack.mp3')
+
     def temp_player(self,pos):
          # general sprite setup  
         self.image = pygame.Surface((16,32)) # remove temp surface 
@@ -78,12 +82,14 @@ class Player(pygame.sprite.Sprite):
 
     def use_weapon(self):
         if self.selected_weapon == 'hoot':
+            self.hoot_attack_sound.play()
             for enemy in self.enemy_sprites.sprites():
                 if enemy.rect.collidepoint(self.target_pos):
                     # print(self.attack + weapon_data[self.selected_weapon]['damage'])
                     enemy.damage()
 
         if self.selected_weapon == 'wing' and not self.timers['weapon cooldown'].active:
+            self.wing_attack_sound.play()
             for enemy in self.enemy_sprites.sprites():
                 if enemy.rect.colliderect(self.attackbox):
                         enemy.damage()
