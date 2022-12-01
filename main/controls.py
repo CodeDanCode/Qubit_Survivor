@@ -17,11 +17,11 @@ class Controls:
         keys = pygame.key.get_pressed()
         if not self.player.timers['weapon use'].active:
             if keys[pygame.K_UP]:
-                self.player.direction.y = -1
-                self.player.status = UP
+                self.player.direction.y = -1 
+                # self.player.status = UP
             elif keys[pygame.K_DOWN]:
                 self.player.direction.y = 1
-                self.player.status = DOWN
+                # self.player.status = DOWN
             else:
                 self.player.direction.y = 0
 
@@ -45,9 +45,7 @@ class Controls:
                 self.player.weapon_index = self.player.weapon_index if self.player.weapon_index < len(self.player.weapons) else 0
                 self.player.selected_weapon = self.player.weapons[self.player.weapon_index]
 
-    def medium_contorls(self):
-        pass
-
+ 
 
     def hard_controls(self):
         
@@ -82,16 +80,17 @@ class Controls:
                         self.qin = 'Z'
                         self.model.add_to_circuit(self.qin,self.count, self.fighting)
                         self.count+=1
-
                     # stop movement
                     elif event.key == pygame.K_SPACE:
                         self.qstate = None
-
-
                     elif event.key == pygame.K_LSHIFT:
                         self.fighting = True
-
                     
+                    elif event.key == pygame.K_k or event.key == pygame.K_a or event.key == pygame.K_w:
+                        self.qin = 'A'
+                        self.model.add_to_circuit(self.qin,self.count,self.fighting)
+
+
                     if self.count >=3 and not self.fighting:
                         self.qstate = self.model.collapse(self.model.qwl)
                         self.set_direction()

@@ -16,7 +16,11 @@ class Player(pygame.sprite.Sprite):
         self.enemy_index = 0
         self.status = 'right_idle'
         self.frame_index = 0 
-        self.temp_player(pos)
+        # self.temp_player(pos)
+        self.image = self.animations[self.status][self.frame_index]
+        self.image = pygame.transform.scale(self.image, (16,32))
+
+        self.rect = self.image.get_rect(center = pos) 
         self.z = LAYERS['main']
 
         self.direction = pygame.math.Vector2()
@@ -52,17 +56,22 @@ class Player(pygame.sprite.Sprite):
         self.weapon_index = 0
         self.selected_weapon = self.weapons[self.weapon_index]
 
+        self.hoot_attack_sound = pygame.mixer.Sound('../resources/sounds/hoot_attack.mp3')
+        self.hoot_attack_sound.set_volume(0.4)
+        self.wing_attack_sound = pygame.mixer.Sound('../resources/sounds/wing_attack.mp3')
+
     def temp_player(self,pos):
          # general sprite setup  
-        self.image = pygame.Surface((16,32)) # remove temp surface 
-        self.image.fill(COLORS['red']) # remove surface fill
+        # self.image = pygame.Surface((16,32)) # remove temp surface 
+        # self.image.fill(COLORS['red']) # remove surface fill
         # use below for player sprite animation when recieved
-        # self.image = self.animations[self.status][self.frame_index]
+        self.image = self.animations[self.status][self.frame_index]
         self.rect = self.image.get_rect(center = pos)  
         
 
     def import_assets(self):
-        self.animations = {'up':[],'up_idle':[],'down':[],'down_idle':[],'left':[],'left_idle':[],'right':[],'right_idle':[],
+        self.animations = {'up_idle':[], 'up':[], 'down_idle':[], 'down':[],
+                            'left_idle':[],'left':[],'right_idle':[],'right':[],
                             'left_hoot':[],'left_wing':[],'right_hoot':[],'right_wing':[]}
 
         for animation in self.animations.keys():
@@ -78,12 +87,14 @@ class Player(pygame.sprite.Sprite):
 
     def use_weapon(self):
         if self.selected_weapon == 'hoot':
+            self.hoot_attack_sound.play()
             for enemy in self.enemy_sprites.sprites():
                 if enemy.rect.collidepoint(self.target_pos):
                     # print(self.attack + weapon_data[self.selected_weapon]['damage'])
                     enemy.damage()
 
         if self.selected_weapon == 'wing' and not self.timers['weapon cooldown'].active:
+            self.wing_attack_sound.play()
             for enemy in self.enemy_sprites.sprites():
                 if enemy.rect.colliderect(self.attackbox):
                         enemy.damage()
@@ -137,6 +148,7 @@ class Player(pygame.sprite.Sprite):
         for sprite in self.collision_sprites.sprites():
             if hasattr(sprite,'hitbox'):
                 if sprite.hitbox.colliderect(self.hitbox):
+                    
                     if direction == 'horizontal':
                         if self.direction.x > 0:
                             self.hitbox.right = sprite.hitbox.left
@@ -152,6 +164,8 @@ class Player(pygame.sprite.Sprite):
                             self.hitbox.top = sprite.hitbox.bottom
                         self.rect.centery = self.hitbox.centery
                         self.pos.y = self.hitbox.centery
+
+
             if hasattr(sprite,'enemybox'):
                 if sprite.enemybox.colliderect(self.attackbox):
                     sprite.speed_status = True
@@ -178,6 +192,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.centery = self.hitbox.centery
         self.collision('vertical')
 
+
+
     
     def update_timers(self):
         for timer in self.timers.values():
@@ -190,8 +206,7 @@ class Player(pygame.sprite.Sprite):
         self.update_timers()
         self.get_target_pos()
         self.move(dt)
-        
-        # self.animate(dt)
+        self.animate(dt)
 
 
 

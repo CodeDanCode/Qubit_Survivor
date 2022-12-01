@@ -12,6 +12,7 @@ ITEM_BOX_SIZE = 80
 
 FONT = 'comicsansms'
 FONT_SIZE = {
+    'xsmall': 16,
     'small' : 25,
     'medium' : 50,
     'large': 85
@@ -25,6 +26,7 @@ TEXT_POS = {
     'button_2': (525,450),
     'button_3': (825,450),
     'refresh': (int(SCREEN_WIDTH/2),int(SCREEN_HEIGHT/2))
+    
 }
 
 
@@ -80,7 +82,8 @@ COLORS = {
 LAYERS = {
     'ground':0,
     'main':1,
-    'items':2
+    'items':2,
+    'overlay':3
 }
 
 SPAWN_LOCATION ={
@@ -112,24 +115,25 @@ weapon_data = {
 
 
 ENEMY_DATA= {
-    'zombie' : {'health':25,'speed':75,'damage':25,'exp':100},
-    'zombie boss': {'health': 100, 'speed':50, 'damage': 50,'exp':200},
-    'robot' : {'health':30, 'speed': 85, 'damage': 35,'exp':140},
-    'robot boss' : {'health': 120, 'speed': 60, 'damage':60,'exp':240}
+    'zombie' : {'health':25,'speed':70,'damage':25,'exp':100, 'attack_sound':'../resources/sounds/zombie_hit.mp3'},
+    'zombie boss': {'health': 100, 'speed':50, 'damage': 50,'exp':200, 'attack_sound':'../resources/sounds/zombie_hit.mp3'},
+    'robot' : {'health':30, 'speed': 80, 'damage': 35,'exp':140, 'attack_sound':'../resources/sounds/robot_hit.mp3'},
+    'robot boss' : {'health': 120, 'speed': 60, 'damage':60,'exp':240, 'attack_sound':'../resources/sounds/robot_hit.mp3'}
 }
 
 qstate_data = {
-    'graphic': '../resources/qstates/H.png',
-    'graphic': '../resources/qstates/I.png',
-    'graphic': '../resources/qstates/S.png',
-    'graphic': '../resources/qstates/S.png',
-    'graphic': '../resources/qstates/X/png',
-    'graphic': '../resources/qstates/Y.png',
-    'graphic': '../resources/qstates/Z.png'
+    'H': '../resources/qstates/H.png',
+    'I': '../resources/qstates/I.png',
+    'S': '../resources/qstates/S.png',
+    'T': '../resources/qstates/T.png',
+    'X': '../resources/qstates/X.png',
+    'Y': '../resources/qstates/Y.png',
+    'Z': '../resources/qstates/Z.png'
 }
 
 CONTROL_BOX = {
-    '0': (222,555), #add placement for images on control line
-    '1': (222,555),
-    '2': (222,555),
+    0: (50,440), #add placement for images on control line
+    1: (50,490),
+    2: (50,530),
 }
+
