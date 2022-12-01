@@ -23,6 +23,14 @@ class Menu:
                 FONT_SIZE['medium']
                 )
 
+        message_to_screen(
+            self.display_surface,
+            'Inputs are: H, I, S, T, X, Y, Z',
+            COLORS['black'],
+            TEXT_POS['refresh'],
+            FONT_SIZE['small']
+        )
+
 
         # easy button
         self.button(
@@ -32,14 +40,7 @@ class Menu:
             COLORS['red'],
             'easy'
             )
-        # medium button
-        self.button(
-            'normal',
-            TEXT_POS['button_2'],
-            COLORS['blue'],
-            COLORS['red'],
-            'normal'
-            )
+            
         # hard button
         self.button(
             'hard',

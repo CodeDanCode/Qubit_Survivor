@@ -65,7 +65,7 @@ class Enemy(pygame.sprite.Sprite):
             self.status = self.status.split('_')[0] + "_idle"
 
         if self.speed_status == True:
-            self.speed = ENEMY_DATA[self.enemy_type]['speed'] * 0.5
+            self.speed = ENEMY_DATA[self.enemy_type]['speed'] * 0.75
         else:
             self.speed = ENEMY_DATA[self.enemy_type]['speed']
 
@@ -144,7 +144,7 @@ class Enemy(pygame.sprite.Sprite):
     def attack(self):
         # self.player.health -= ENEMY_DATA[self.enemy_type]['damage']
         
-        self.player.health -= self.enemy_damage
+        # self.player.health -= self.enemy_damage
         
         if self.player.health <= 0:
             self.player.kill()

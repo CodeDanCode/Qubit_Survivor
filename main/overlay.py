@@ -20,10 +20,18 @@ class Overlay:
             self.weapon_graphics.append(weapon)
 
 
-        self.qstate_graphics = []
-        for qstate in qstate_data.values():
-            qstate = pygame.image.load(qstate_data['graphic']).convert_alpha()
-            self.qstate_graphics.append(qstate)
+        # self.qstate_graphics = []
+        # for qstate in qstate_data.values():
+        #     qstate = pygame.image.load(qstate_data['graphic']).convert_alpha()
+        #     self.qstate_graphics.append(qstate)
+
+        self.H = pygame.image.load(qstate_data['H']).convert_alpha()
+        self.I = pygame.image.load(qstate_data['I']).convert_alpha()
+        self.S = pygame.image.load(qstate_data['S']).convert_alpha()
+        self.T = pygame.image.load(qstate_data['T']).convert_alpha()
+        self.X = pygame.image.load(qstate_data['X']).convert_alpha()
+        self.Y = pygame.image.load(qstate_data['Y']).convert_alpha()
+        self.Z = pygame.image.load(qstate_data['Z']).convert_alpha()
 
 
 
@@ -69,15 +77,46 @@ class Overlay:
 
 
 
-    # def show_controls(self,qstate_index,count):
-    #     if count == 0:
-    #         qstate_surf = self.qstate_graphics[qstate_index]
-    #         qstate_rect = qstate_surf.get_rect(center = CONTROL_BOX[qstate_index])
-    #         self.display_surface.blit(qstate_surf,qstate_rect)
+    def show_controls(self,qin,qstate_index):
+        
+        # qstate_surf = self.qstate_graphics[qstate_index]
+        print(qstate_index)
+        qstate_surf = self.H       
+        if qin == 'H':                    
+            qstate_surf = self.H
+        elif qin == 'I':
+            qstate_surf = self.I
+        elif qin == 'S':
+            qstate_surf = self.S
+        elif qin == 'T':
+            qstate_surf = self.T
+        elif qin == 'X':
+            qstate_surf = self.X
+        elif qin == 'Y':
+            qstate_surf = self.Y
+        elif qin == 'Z':
+            qstate_surf = self.Z
+        
+        qstate_surf = pygame.transform.scale(qstate_surf,(40,40))
+        qstate_rect = qstate_surf.get_rect(center = CONTROL_BOX[qstate_index])
+        self.display_surface.blit(qstate_surf,qstate_rect)
 
 
+    def console_display(self):
+        textSurf, textRect = text_objects('Console','Black',FONT_SIZE['medium'])
+        textRect.center = (120,50)
+        self.display_surface.blit(textSurf, textRect)
 
 
+    def qoutput_display(self, qoutput):
+        textSurf, textRect = text_objects(qoutput,'Black',FONT_SIZE['xsmall'])
+        textRect.center = (125,200)
+        self.display_surface.blit(textSurf, textRect)
+
+    def instruction(self,msg):
+        textSurf, textRect = text_objects(msg,'Black', FONT_SIZE['xsmall'])
+        textRect.center = (123, 380)
+        self.display_surface.blit(textSurf,textRect)
 
     def display(self):
         # pygame.draw.rect(self.display_surface,'black',self.health_bar_rect)
@@ -85,8 +124,7 @@ class Overlay:
         self.show_exp(self.player.level)
         self.weapon_overlay(self.player.weapon_index,self.player.timers['weapon cooldown'].active)
         # set if statement for when hard or medium mode is selected
-        # if self.player.selected != 'easy':
-        #     self.show_controls(self.player.controls.qin,self.player.controls.count)
+       
 
         # self.health_surf = pygame.transform.scale(self.health_surf,(232,45))
         # self.health_rect = self.health_surf.get_rect(midtop=OVERLAY_POSITIONS['health bar'])
@@ -97,6 +135,26 @@ class Overlay:
         self.control_surf = pygame.transform.scale(self.control_surf,(225,175))
         self.control_rect = self.control_surf.get_rect(topleft = OVERLAY_POSITIONS['control'])
 
+
         # self.display_surface.blit(self.health_surf,self.health_rect)
         self.display_surface.blit(self.sketch_surf,self.sketch_rect)
-        self.display_surface.blit(self.control_surf,self.control_rect)
+        self.display_surface.blit(self.control_surf,self.control_rect)    
+        
+        self.console_display()
+
+        if self.player.selected != 'easy':    
+            self.show_controls(self.player.controls.qin,self.player.controls.count)
+            self.qoutput_display(self.player.controls.model.qoutput)
+            self.instruction('Inputs are: H, I, S, T, X, Y, Z')
+
+
+        else:
+            pass
+
+        
+
+
+        
+        
+
+        

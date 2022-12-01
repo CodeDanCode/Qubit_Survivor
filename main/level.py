@@ -87,10 +87,6 @@ class Level:
 
 
 
-   
-
-
-
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
@@ -116,15 +112,6 @@ class CameraGroup(pygame.sprite.Group):
                         attackbox_rect = player.attackbox.copy()
                         attackbox_rect.center = offset_rect.center
                         pygame.draw.rect(self.custom_surface,COLORS['blue'],attackbox_rect,5)
-
-                        hitbox_rect = player.hitbox.copy()
-                        hitbox_rect.center = offset_rect.center
-                        pygame.draw.rect(self.custom_surface,COLORS['green'],hitbox_rect,5)
-                        
-                        enemy_rect = player.enemybox.copy()
-                        enemy_rect.center = offset_rect.center
-                        pygame.draw.rect(self.custom_surface,'orange',enemy_rect,5)
-
 
                         target_hoot_pos = offset_rect.center + PLAYER_HOOT_OFFSET[player.status.split('_')[0]]
                         pygame.draw.circle(self.custom_surface,'blue',target_hoot_pos,5)

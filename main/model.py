@@ -5,7 +5,7 @@ from pylatexenc import *
 
 class CircuitGridModel:
     def __init__(self):
-        
+        self.qoutput = None
         self.clear_circuit_move()
         self.clear_circuit_fight()
 
@@ -31,7 +31,7 @@ class CircuitGridModel:
         self.qwlf.i(0)
         self.qwlf.x(1)
 
-        qoutput = "Clearing circuit..."
+        # self.qoutput = "Clearing circuit..."
         # print(qoutput)
 
     def add_to_circuit(self,qin, qcircuit, isFight):
@@ -39,7 +39,7 @@ class CircuitGridModel:
             if isFight: qtype = self.qwlf
             if not isFight: qtype = self.qwl
         except:
-            qoutput = "Something went wrong. Input was "+isFight
+            self.qoutput = "Something went wrong. Input was "+isFight
             # print(qoutput)
 
         self.qin = qin
@@ -67,7 +67,8 @@ class CircuitGridModel:
         # change output display
         else:
         # don't change the output display
-            qoutput = qin+" is not a valid input. The valid inputs are: H, I, S, T, X, Y, Z."
+            self.qoutput = "Invalid Input"
+
             # print(qoutput)
             return 'error'
 
@@ -80,7 +81,7 @@ class CircuitGridModel:
     def collapse(self,qtype):
         # Observes and collapses current circuit. Returns binary list.
 
-        qoutput = "Collapsing circuit..."
+        # self.qoutput = "Collapsing circuit..."
         # print(qoutput)
 
         qtype.measure_all()
@@ -92,11 +93,12 @@ class CircuitGridModel:
         result = simulator.run(qtype, shots=1, memory=True).result()
         memory = result.get_memory(qtype)
 
-        qoutput = "Circuit was observed as "+memory[0]
+        self.qoutput = "Circuit was observed as "+memory[0]
         # print(qoutput)
 
         return memory[0]
 
     def update(self):
+        self.qoutput
         self.clear_circuit_move()
         self.clear_circuit_fight()
