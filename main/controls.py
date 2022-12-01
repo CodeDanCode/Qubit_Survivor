@@ -113,7 +113,7 @@ class Controls:
         # north
         if self.qstate == '000':
             self.player.direction.y = -1
-            self.player.status = UP
+            # self.player.status = UP
         # north east
         if self.qstate == '001':
             self.player.direction.y = -1
@@ -132,7 +132,7 @@ class Controls:
         # south
         if self.qstate == '100':
             self.player.direction.y = 1
-            self.player.status = DOWN
+            # self.player.status = DOWN
         # south west
         if self.qstate == '101':
             self.player.direction.y = 1

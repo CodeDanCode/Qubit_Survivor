@@ -144,7 +144,7 @@ class Enemy(pygame.sprite.Sprite):
     def attack(self):
         # self.player.health -= ENEMY_DATA[self.enemy_type]['damage']
         
-        # self.player.health -= self.enemy_damage
+        self.player.health -= self.enemy_damage
         
         if self.player.health <= 0:
             self.player.kill()
