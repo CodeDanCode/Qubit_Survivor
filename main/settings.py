@@ -3,12 +3,38 @@ from pygame import Vector2
 SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 600
 TILE_SIZE = 64
+WINDOW_WIDTH = 950
+WINDOW_HEIGHT = 580
+
+BAR_HEIGHT = 20
+HEALTH_BAR_WIDTH = 200
+ITEM_BOX_SIZE = 80
+
+FONT = 'comicsansms'
+FONT_SIZE = {
+    'small' : 25,
+    'medium' : 50,
+    'large': 85
+}
+
+BUTTON_SIZE =  (150,70)
+
+TEXT_POS = {
+    'title': (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 2) - 150),
+    'button_1': (225,450),
+    'button_2': (525,450),
+    'button_3': (825,450),
+    'refresh': (int(SCREEN_WIDTH/2),int(SCREEN_HEIGHT/2))
+}
 
 
-RUN = True
-NUM_ENEMIES = None
-PLAYER_TURN = 'player turn'
-USE_ATTACK = 'use attack'
+TEXT_COLOR = '#EEEEEE'
+HEALTH_COLOR = 'red'
+
+UI_BG_COLOR = '#222222'
+UI_BORDER_COLOR ='#111111'
+UI_BORDER_COLOR_ACTIVE = 'gold'
+
 
 # control direction
 UP = 'up'
@@ -19,12 +45,14 @@ RIGHT = 'right'
 # enemies
 ENEMY_1 = 'zombie'
 ENEMY_2 = 'robot'
-ENEMY_BOSS_1 = 'boss_zombie'
-ENEMY_BOSS_2 = 'boss_robot'
+ENEMY_BOSS_1 = 'zombie boss'
+ENEMY_BOSS_2 = 'robot boss'
 
 OVERLAYS ={
     'health bar' : "healthbar",
-    'sketch':'sketch_board'
+    'sketch':'sketch_board',
+    'test': 'test',
+    'control_bar':'control_bar'
 }
 
 PATHS = {
@@ -34,11 +62,11 @@ PATHS = {
     'data path' : '../resources/data/tmx/map.tmx'
 }
 
-
 OVERLAY_POSITIONS = {
     'health bar' :(SCREEN_WIDTH - 125,25),
     'progress bar' :(70, SCREEN_HEIGHT -5),
-    'sketch' : (10,5)
+    'sketch' : (10,5),
+    'control': (10,410)
 }
 
 COLORS = {
@@ -55,3 +83,53 @@ LAYERS = {
     'items':2
 }
 
+SPAWN_LOCATION ={
+    'top' : -180,
+    'bottom': WINDOW_HEIGHT + 180,
+    'left': -180,
+    'right': WINDOW_WIDTH + 180
+}
+
+
+PLAYER_HOOT_OFFSET = {
+    'left':Vector2(-80,0), # 40
+    'right':Vector2(80,0), # 40
+    'up': Vector2(0,-80),
+    'down':Vector2(0,80)
+}
+
+PLAYER_WING_OFFSET = {
+    'left': Vector2(-165,0),
+    'right': Vector2(165,0),
+    'up': Vector2(0,-165),
+    'down': Vector2(0,165)
+}
+
+weapon_data = {
+    'hoot' : {'cooldown': 100, 'damage': 15, 'graphic': '../resources/assets/hoot.png'},
+    'wing' : {'cooldown': 400, 'damage' : 30, 'graphic': '../resources/assets/wing.png'}
+}
+
+
+ENEMY_DATA= {
+    'zombie' : {'health':25,'speed':75,'damage':25,'exp':100},
+    'zombie boss': {'health': 100, 'speed':50, 'damage': 50,'exp':200},
+    'robot' : {'health':30, 'speed': 85, 'damage': 35,'exp':140},
+    'robot boss' : {'health': 120, 'speed': 60, 'damage':60,'exp':240}
+}
+
+qstate_data = {
+    'graphic': '../resources/qstates/H.png',
+    'graphic': '../resources/qstates/I.png',
+    'graphic': '../resources/qstates/S.png',
+    'graphic': '../resources/qstates/S.png',
+    'graphic': '../resources/qstates/X/png',
+    'graphic': '../resources/qstates/Y.png',
+    'graphic': '../resources/qstates/Z.png'
+}
+
+CONTROL_BOX = {
+    '0': (222,555), #add placement for images on control line
+    '1': (222,555),
+    '2': (222,555),
+}

@@ -1,46 +1,69 @@
 import pygame
 from settings import *
 from support import *
-from timer import Timer
-
-
-
+from timers import Timer
+from controls import *
+from enemy import Enemy
+import random
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, group,collision_sprites):
+    def __init__(self, pos, group,collision_sprites,enemy_sprites):
         super().__init__(group)
         self.import_assets()
-        self.status = '_idle'
+        self.controls = Controls(self)
+        self.game_over = False
+        self.group = [group,collision_sprites,enemy_sprites]
+        self.enemy_index = 0
+        self.status = 'right_idle'
         self.frame_index = 0 
-
-        # general sprite setup  
-        self.image = pygame.Surface((32,64)) # remove temp surface 
-        self.image.fill(COLORS['red']) # remove surface fill
-        # self.image = self.animations[self.status][self.frame_index]
-        self.rect = self.image.get_rect(center = pos)
-        
+        self.temp_player(pos)
         self.z = LAYERS['main']
 
-        # character movement variables
         self.direction = pygame.math.Vector2()
         self.pos = pygame.math.Vector2(self.rect.center)
-        self.speed = 200
+
+        self.stats = {'health':100 , 'attack': 10,'speed': 200, 'level': 1, 'exp':100}
+        self.maxstats = {'health':200,'attack':20, 'speed': 300, 'exp':10000}
+        self.health = self.stats['health'] 
+        self.attack = self.stats['attack']
+        self.exp = self.stats['exp']
+        self.speed = self.stats['speed']
+        self.level = self.stats['level']
         
-        self.timers = {
-            USE_ATTACK: Timer(350, self.use_attack),
-            PLAYER_TURN: Timer(200)
-            }
+        self.target_rect = None
 
-        self.selected_attack = 'hoot'
-
-        # for collision of sprite boxes
         self.hitbox = self.rect.copy()
-        self.attackbox = self.rect.copy().inflate(self.rect.width * 4, self.rect.height * 4)
+        self.attackbox = self.rect.copy().inflate(self.rect.width * 20, self.rect.width * 20)
+
+        # self.enemybox = self.rect.copy().inflate(self.rect.width * 2, self.rect.height *2)
+        self.enemybox = self.rect.copy()
+
+
         self.collision_sprites = collision_sprites
+        self.enemy_sprites = enemy_sprites
+
+        self.timers = {
+                'weapon use': Timer(350, self.use_weapon),
+                'weapon switch': Timer(200),
+                'weapon cooldown' : Timer(15000)
+            }
+        
+        self.weapons = ['hoot','wing'] # add wing when ready
+        self.weapon_index = 0
+        self.selected_weapon = self.weapons[self.weapon_index]
+
+    def temp_player(self,pos):
+         # general sprite setup  
+        self.image = pygame.Surface((16,32)) # remove temp surface 
+        self.image.fill(COLORS['red']) # remove surface fill
+        # use below for player sprite animation when recieved
+        # self.image = self.animations[self.status][self.frame_index]
+        self.rect = self.image.get_rect(center = pos)  
+        
 
     def import_assets(self):
-        self.animations = {'_idle':[],'up':[],'down':[],'left':[],'right':[],
-                            'left_attack':[],'right_attack':[]}
+        self.animations = {'up':[],'up_idle':[],'down':[],'down_idle':[],'left':[],'left_idle':[],'right':[],'right_idle':[],
+                            'left_hoot':[],'left_wing':[],'right_hoot':[],'right_wing':[]}
 
         for animation in self.animations.keys():
             full_path = PATHS['player base'] + animation
@@ -52,62 +75,63 @@ class Player(pygame.sprite.Sprite):
             self.frame_index = 0
         self.image = self.animations[self.status][int(self.frame_index)]
 
-    def use_attack(self):
-        # print(self.selected_attack)
-        pass
-        
-    def input(self):
-        keys = pygame.key.get_pressed()
-        # control for player movement
-        # condition on player_turn and attack turn status
-        # control for attack selection 
-        # condition attack selection based on and 
-        #
-        # if not self.timers[USE_ATTACK].active: 
-        #  change if for player turn to not allow players to move. 
-        if keys[pygame.K_UP]:
-            self.direction.y = -1
-            self.status = UP
-        elif keys[pygame.K_DOWN]:
-            self.direction.y = 1
-            self.status = DOWN
-        else:
-            self.direction.y = 0
 
-        if keys[pygame.K_RIGHT]:
-            self.direction.x = 1
-            self.status = LEFT
-        elif keys[pygame.K_LEFT]:
-            self.direction.x = -1
-            self.status = RIGHT
-        else:
-            self.direction.x = 0
+    def use_weapon(self):
+        if self.selected_weapon == 'hoot':
+            for enemy in self.enemy_sprites.sprites():
+                if enemy.rect.collidepoint(self.target_pos):
+                    # print(self.attack + weapon_data[self.selected_weapon]['damage'])
+                    enemy.damage()
 
-        if keys[pygame.K_SPACE]:
-            self.timers[USE_ATTACK].activate()
-            self.direction = pygame.math.Vector2()
+        if self.selected_weapon == 'wing' and not self.timers['weapon cooldown'].active:
+            for enemy in self.enemy_sprites.sprites():
+                if enemy.rect.colliderect(self.attackbox):
+                        enemy.damage()
+                        self.timers['weapon cooldown'].activate()
 
-        # if keys[pygame.K_q] and not self.timers[player_turn].active:
-        #     self.timers[player_turn].activate()
-        #     self.player_index +=1
-        #     print(self.player_index)
-        #     self.direction = pygame.math.Vector2()
+
+
+    def get_target_pos(self):
+        if self.selected_weapon == 'hoot':
+            self.target_pos = self.rect.center + PLAYER_HOOT_OFFSET[self.status.split('_')[0]]
+
+        if self.selected_weapon == 'wing':
+            self.target_pos = self.rect.center + PLAYER_WING_OFFSET[self.status.split('_')[0]]
+
+    def control(self,selected):
+        self.selected = selected
+        if self.selected == 'easy':
+            self.controls.easy_controls()
+        if self.selected == 'normal':
+            pass
+        if self.selected == 'hard':
+            self.controls.hard_controls()
 
     def get_status(self):
-
         if self.direction.magnitude() == 0:
-            # self.status +=self.status.split('_')[0] + "idle"
-            self.status += '_idle'
+            self.status = self.status.split('_')[0] + "_idle"
+            # self.status += '_idle'
 
-        if self.timers[USE_ATTACK].active:
-            print("attack is be used")
-        
-        # if self.timers[player_turn].active:
-            # print("player turn: " + str(self.timers[player_turn].active))
+        if self.timers['weapon use'].active:
+            self.status = self.status.split('_')[0] + '_' + self.selected_weapon
+  
+
+        if self.exp >= 1000 * self.level:
+            self.levelup()
+
     
-    def update_timers(self):
-        for timer in self.timers.values():
-            timer.update()
+    def levelup(self):
+        self.level += 1
+        self.health += 10
+        self.attack += 1
+        self.speed += 10
+        
+        if (self.level % 2) != 0 and self.enemy_index <=3:
+            self.enemy_index += 1
+
+        elif self.enemy_index == 3:
+            self.enemy_index = 0
+
 
     def collision(self,direction):
         for sprite in self.collision_sprites.sprites():
@@ -128,10 +152,11 @@ class Player(pygame.sprite.Sprite):
                             self.hitbox.top = sprite.hitbox.bottom
                         self.rect.centery = self.hitbox.centery
                         self.pos.y = self.hitbox.centery
-            elif hasattr(sprite,'attackbox'):
-                if sprite.attackbox.colliderect(self.attackbox):
-                    print('attack box')
-                    # add attack phase here 
+            if hasattr(sprite,'enemybox'):
+                if sprite.enemybox.colliderect(self.attackbox):
+                    sprite.speed_status = True
+                else:
+                    sprite.speed_status = False
 
     def move(self,dt):
     
@@ -141,6 +166,7 @@ class Player(pygame.sprite.Sprite):
         self.pos.x += self.direction.x * self.speed * dt
         self.hitbox.centerx = round(self.pos.x)
         self.attackbox.centerx = round(self.pos.x)
+        self.enemybox.centerx = round(self.pos.x)
         self.rect.centerx = self.hitbox.centerx
         self.collision('horizontal')
 
@@ -148,89 +174,27 @@ class Player(pygame.sprite.Sprite):
         self.pos.y += self.direction.y * self.speed * dt
         self.hitbox.centery = round(self.pos.y)
         self.attackbox.centery = round(self.pos.y)
+        self.enemybox.centery = round(self.pos.y)
         self.rect.centery = self.hitbox.centery
         self.collision('vertical')
-      
+
     
+    def update_timers(self):
+        for timer in self.timers.values():
+            timer.update()
 
-
-    def update(self,dt):
-        self.input()
+    def update(self,dt,selected):
+        # self.input()
+        self.control(selected)
         self.get_status()
         self.update_timers()
+        self.get_target_pos()
         self.move(dt)
+        
         # self.animate(dt)
 
-class Enemy(pygame.sprite.Sprite):
-    def __init__(self,pos,player,group):
-        super().__init__(group)
 
-        self.enemy_type = ENEMY_1
-        self.import_assets()
-        self.status = '_idle'
-        self.frame_index = 0
 
-        self.image = self.animations[self.status][self.frame_index]
-        self.rect = self.image.get_rect(center = pos)
-        self.z = LAYERS['main']
-      
-        self.player = player
-        self.direction = pygame.math.Vector2()
-        self.pos = pygame.math.Vector2(self.rect.center)
-        self.speed = 75
 
-        # self.hitbox = self.rect.copy()
-        self.attackbox = self.rect.copy()
+
         
-
-    def import_assets(self):
-        self.animations = {'_idle':[],'left_idle':[],'left':[],'right_idle':[],'right':[]}
-        for animation in self.animations.keys():
-            full_path = PATHS['enemy base']+ self.enemy_type +"/"+ animation
-            self.animations[animation] = import_folder(full_path)
-    
-    def animate(self,dt):
-        self.frame_index +=4 * dt
-        if self.frame_index >= len(self.animations[self.status]):
-            self.frame_index = 0
-        self.image = self.animations[self.status][int(self.frame_index)]
-
-    def get_status(self):
-
-        if self.direction.magnitude() == 0:
-            self.status = self.status.split('_')[0] + "_idle"
-        
-        # if self.timers[use_attack].active:
-        #     print("attack is be used")
-        
-        # if self.timers[player_turn].active:
-            # print("player turn: " + str(self.timers[player_turn].active))
-
-    def move(self,dt):
-
-        self.direction.x, self.direction.y = self.player.rect.x - self.rect.x, self.player.rect.y - self.rect.y
-        if self.direction.magnitude() > 0:
-            self.direction = self.direction.normalize()
-        #horizontal movement
-        if self.rect.x > self.player.rect.x:
-            self.status = LEFT
-        self.pos.x += self.direction.x * self.speed * dt
-        # self.hitbox.centerx = round(self.pos.x)
-        self.attackbox.centerx = round(self.pos.x)
-        self.rect.centerx = self.attackbox.centerx
-        # self.rect.centerx = self.pos.x
-        
-        #vertical movement
-        if self.rect.x < self.player.rect.x:
-            self.status = RIGHT
-        self.pos.y += self.direction.y * self.speed * dt
-        # self.hitbox.centery = round(self.pos.y)
-        self.attackbox.centery = round(self.pos.y)
-        self.rect.centery = self.attackbox.centery
-        # self.rect.centery = self.pos.y
-        
-
-    def update(self,dt):
-        self.get_status()
-        self.move(dt)
-        self.animate(dt)
